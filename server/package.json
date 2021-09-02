@@ -1,0 +1,28 @@
+{
+  "name": "plannitt-server",
+  "version": "0.0.1",
+  "description": "A collaborative timetable creator built for teams",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "mongodb": "^4.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliasbenb/plannitt.git"
+  },
+  "author": "Elias Benbourenane <eliasbenbourenane@gmail.com> (https://eliasbenb.cf)",
+  "funding": [
+    {
+      "type": "ko-fi",
+      "url": "https://ko-fi.com/eliasbenb"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliasbenb/plannitt/issues"
+  }
+}

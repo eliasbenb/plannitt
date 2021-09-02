@@ -1,0 +1,45 @@
+{
+  "name": "plannitt-client",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.12.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.1"
+  },
+  "devDependencies": {
+    "react-scripts": "4.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliasbenb/plannitt.git"
+  },
+  "author": "Elias Benbourenane <eliasbenbourenane@gmail.com> (https://eliasbenb.cf)",
+  "funding": [
+    {
+      "type": "ko-fi",
+      "url": "https://ko-fi.com/eliasbenb"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliasbenb/plannitt/issues"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:35053"
+}

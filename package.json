@@ -1,0 +1,28 @@
+{
+  "name": "plannitt",
+  "version": "0.0.1",
+  "description": "A collaborative timetable creator built for teams",
+  "scripts": {
+    "client": "cd client && yarn run start",
+    "server": "cd server && yarn run start",
+    "start": "concurrently \"yarn run client\" \"yarn run server\""
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eliasbenb/plannitt.git"
+  },
+  "author": "Elias Benbourenane <eliasbenbourenane@gmail.com> (https://eliasbenb.cf)",
+  "funding": [
+    {
+      "type": "ko-fi",
+      "url": "https://ko-fi.com/eliasbenb"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eliasbenb/plannitt/issues"
+  }
+}
