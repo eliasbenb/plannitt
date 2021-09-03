@@ -81,14 +81,18 @@ export default class Home extends Component {
       };
     }
 
-    let req_path = "/api/v1/planners/post";
+    let req_path = "/api/v1/planner/post";
     let req_args = "";
 
     axios
       .post(req_path + req_args, post_data)
       .then((response) => {
-        let data = response.data.content;
-        this.props.history.push(`/planner/${data.insertedId}`);
+        let data = response.data;
+        if (data.success) {
+          this.props.history.push(`/planner/${data.content.insertedId}`);
+        } else {
+          window.alert(data.message || "Error!");
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -158,7 +162,9 @@ export default class Home extends Component {
     return !isCreator ? (
       <div className="Home">
         <div className="page__container">
-          <Typography variant="h1">plannitt</Typography>
+          <Typography variant="h1" className="title">
+            plannitt
+          </Typography>
           <div style={{ margin: "25px 0 25px 0" }}>
             <Button
               variant="outlined"
@@ -230,7 +236,7 @@ export default class Home extends Component {
                   color="primary"
                 />
               }
-              label={"Public"}
+              label={!isPublic ? "Private" : "Public"}
             />
             <FormControlLabel
               control={

@@ -1,0 +1,5 @@
+.button {
+  display: grid;
+  padding: 3px;
+  place-items: center;
+}
