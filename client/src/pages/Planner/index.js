@@ -25,7 +25,7 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
 import axios from "axios";
 
-import { theme } from "../../components";
+import { Header, theme } from "../../components";
 
 import "./index.css";
 export default class Planner extends Component {
@@ -249,9 +249,7 @@ export default class Planner extends Component {
       </div>
     ) : isLoggedIn ? (
       <div className="page__container">
-        <Typography variant="h1" className="title">
-          plannitt
-        </Typography>
+        <Header />
         <div
           style={{
             backgroundColor: theme.palette.background.paper,
@@ -351,9 +349,7 @@ export default class Planner extends Component {
       </div>
     ) : (
       <div className="page__container">
-        <Typography variant="h1" className="title">
-          plannitt
-        </Typography>
+        <Header />
         <TextField
           label="Password"
           value={password || ""}

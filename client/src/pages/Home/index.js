@@ -16,6 +16,8 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
 import axios from "axios";
 
+import { Header } from "../../components";
+
 import "./index.css";
 
 export default class Home extends Component {
@@ -170,9 +172,7 @@ export default class Home extends Component {
     return !isCreator ? (
       <div className="Home">
         <div className="page__container">
-          <Typography variant="h1" className="title">
-            plannitt
-          </Typography>
+          <Header />
           <div style={{ margin: "25px 0 25px 0" }}>
             <Button
               variant="outlined"
@@ -213,7 +213,7 @@ export default class Home extends Component {
     ) : (
       <div className="Home">
         <div className="page__container">
-          <Typography variant="h1">plannitt</Typography>
+          <Header />
           <div style={{ margin: "25px 0 25px 0" }}>
             <TextField
               label="Planner Title"
