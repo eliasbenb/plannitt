@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import { guid, Home, theme, Timetable } from "./components";
+import { guid, Home, Planner, theme } from "./components";
 
 import "./index.css";
 
@@ -21,8 +21,8 @@ ReactDOM.render(
         />
         <Route
           exact
-          path={"/timetable/:oid"}
-          render={(props) => <Timetable key={guid()} {...props} />}
+          path={"/planner/:oid"}
+          render={(props) => <Planner key={guid()} {...props} />}
         />
       </Switch>
     </ThemeProvider>

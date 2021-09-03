@@ -34,6 +34,14 @@ html {
   color: inherit;
 }
 
+.page__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
 .Loading {
   min-height: 100vh;
   display: flex;
