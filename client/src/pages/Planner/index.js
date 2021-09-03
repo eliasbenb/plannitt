@@ -74,6 +74,13 @@ export default class Planner extends Component {
         if (error.response) {
           if (error.response.status == 401) {
             this.setState({ isLoaded: true, isLoggedIn: false });
+          } else if (
+            error.response.status == 404 ||
+            error.response.status == 400
+          ) {
+            console.error(error);
+            window.alert(error.response.data.message || "Error!");
+            this.props.history.push("/");
           } else {
             console.error(error);
             window.alert(error.response.data.message || "Error!");
