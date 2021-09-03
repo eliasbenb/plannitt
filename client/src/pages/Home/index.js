@@ -1,9 +1,19 @@
 import React, { Component } from "react";
 
+import { Link } from "react-router-dom";
+
 import {
+  Avatar,
   Button,
+  Divider,
   FormControlLabel,
+  IconButton,
   InputAdornment,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
   Switch,
   TextField,
   Typography,
@@ -12,11 +22,12 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SearchIcon from "@material-ui/icons/Search";
 import TitleIcon from "@material-ui/icons/Title";
+import TodayRoundedIcon from "@material-ui/icons/TodayRounded";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
 import axios from "axios";
 
-import { Header } from "../../components";
+import { Header, theme } from "../../components";
 
 import "./index.css";
 
@@ -31,6 +42,9 @@ export default class Home extends Component {
       isValid: [false, false, true],
       mode: "timetable",
       password: null,
+      recent_planners: JSON.parse(
+        window.localStorage.getItem("recent_planners") || "{}"
+      ),
       title: null,
     };
     this.onCodeChange = this.onCodeChange.bind(this);
@@ -167,8 +181,16 @@ export default class Home extends Component {
   }
 
   render() {
-    let { code, isCreator, isPublic, isValid, mode, password, title } =
-      this.state;
+    let {
+      code,
+      isCreator,
+      isPublic,
+      isValid,
+      mode,
+      password,
+      recent_planners,
+      title,
+    } = this.state;
     return !isCreator ? (
       <div className="Home">
         <div className="page__container">
@@ -208,6 +230,52 @@ export default class Home extends Component {
           >
             Search
           </Button>
+          <div
+            style={{
+              backgroundColor: theme.palette.background.paper,
+              border: "2px solid #111",
+              borderRadius: "10px",
+              margin: "25px 0 25px 0",
+            }}
+          >
+            <List style={{ width: "300px", maxWidth: "100%" }} dense={false}>
+              <ListItem>
+                <ListItemText
+                  primary={
+                    <Typography variant="h5" style={{ textAlign: "center" }}>
+                      Recent Planners
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <Divider />
+              {recent_planners
+                ? Object.keys(recent_planners)
+                    .splice(-5)
+                    .map((k, n) => (
+                      <ListItem key={`planner-${n}`}>
+                        <Link
+                          to={`/planner/${recent_planners[k]._id}`}
+                          className="no_decoration_link"
+                        >
+                          <ListItemAvatar>
+                            <Avatar>
+                              <TodayRoundedIcon />
+                            </Avatar>
+                          </ListItemAvatar>
+                        </Link>
+                        <Link
+                          to={`/planner/${recent_planners[k]._id}`}
+                          className="no_decoration_link"
+                        >
+                          <ListItemText primary={recent_planners[k].title} />
+                        </Link>
+                      </ListItem>
+                    ))
+                    .reverse()
+                : null}
+            </List>
+          </div>
         </div>
       </div>
     ) : (

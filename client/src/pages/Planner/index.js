@@ -38,10 +38,11 @@ export default class Planner extends Component {
       isLoggedIn: false,
       isValid: [false, false],
       new_name: "",
-      password:
-        JSON.parse(window.localStorage.getItem("passwords") || "{}")[
+      password: (
+        JSON.parse(window.localStorage.getItem("recent_planners") || "{}")[
           this.props.match.params.oid
-        ] || "",
+        ] || {}
+      ).password,
     };
     this.onAddUser = this.onAddUser.bind(this);
     this.onCopyLink = this.onCopyLink.bind(this);
@@ -54,8 +55,9 @@ export default class Planner extends Component {
 
   componentDidMount() {
     let { password } = this.state;
+    const oid = this.props.match.params.oid;
 
-    let req_path = `/api/v1/planner/get/${this.props.match.params.oid}`;
+    let req_path = `/api/v1/planner/get/${oid}`;
     let req_args = `?password=${password}`;
 
     axios
@@ -63,6 +65,19 @@ export default class Planner extends Component {
       .then((response) => {
         let data = response.data;
         if (data.success) {
+          let recent_planners = JSON.parse(
+            window.localStorage.getItem("recent_planners") || "{}"
+          );
+          recent_planners[oid] = {
+            _id: data.content._id,
+            mode: data.content.mode,
+            password: password,
+            title: data.content.title,
+          };
+          window.localStorage.setItem(
+            "recent_planners",
+            JSON.stringify(recent_planners)
+          );
           this.setState({
             data: data.content,
             isLoaded: true,
@@ -142,6 +157,14 @@ export default class Planner extends Component {
     axios
       .get(req_path + req_args)
       .then((response) => {
+        let recent_planners = JSON.parse(
+          window.localStorage.getItem("recent_planners") || "{}"
+        );
+        delete recent_planners[oid];
+        window.localStorage.setItem(
+          "recent_planners",
+          JSON.stringify(recent_planners)
+        );
         this.props.history.push("/");
       })
       .catch((error) => {
@@ -190,11 +213,19 @@ export default class Planner extends Component {
       .then((response) => {
         let data = response.data;
         if (data.success) {
-          let passwords = JSON.parse(
-            window.localStorage.getItem("passwords") || "{}"
+          let recent_planners = JSON.parse(
+            window.localStorage.getItem("recent_planners") || "{}"
           );
-          passwords[oid] = password;
-          window.localStorage.setItem("passwords", JSON.stringify(passwords));
+          recent_planners[oid] = {
+            _id: data.content._id,
+            mode: data.content.mode,
+            password: password,
+            title: data.content.title,
+          };
+          window.localStorage.setItem(
+            "recent_planners",
+            JSON.stringify(recent_planners)
+          );
           this.setState({
             data: data.content,
             isLoaded: true,
