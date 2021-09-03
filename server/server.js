@@ -38,13 +38,16 @@ app.post("/api/v1/planner/post", async (req, res) => {
   };
   const result = await collection.insertOne(data);
   if (!result) {
+    res.status(500)
     res.send({
+      code: 500,
       content: null,
       message: "The planner could not be created!",
       success: false,
     });
   } else {
-    res.send({ content: result, success: true });
+    res.status(200)
+    res.send({ code: 200, content: result, success: true });
   }
 });
 
@@ -58,7 +61,9 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
   };
   const data = await collection.findOne({ _id: oid });
   if (!data) {
+    res.status(404)
     res.send({
+      code: 404,
       content: null,
       message: "Planner not found!",
       success: false,
@@ -72,23 +77,30 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
       if (result && result.modifiedCount > 0) {
         const new_data = await collection.findOne({ _id: oid });
         if (!new_data) {
+          res.status(404)
           res.send({
+            code: 404,
             content: null,
             message: "Planner not found!",
             success: false,
           });
         } else {
-          res.send({ content: new_data, success: true });
+          res.status(200)
+          res.send({ code: 200, content: new_data, success: true });
         }
       } else {
+        res.status(500)
         res.send({
+          code: 500,
           content: null,
           message: "Deletion failed",
           success: false,
         });
       }
     } else {
+      res.status(401);
       res.send({
+        code: 401,
         content: null,
         message: "The password provided was incorrect",
         success: false,
@@ -103,12 +115,21 @@ app.get("/api/v1/planner/get/:oid", async (req, res) => {
   const oid = new ObjectID(req.params.oid);
   const result = await collection.findOne({ _id: oid });
   if (!result) {
-    res.send({ content: null, message: "Planner not found!", success: false });
+    res.status(404)
+    res.send({
+      code: 404,
+      content: null,
+      message: "Planner not found!",
+      success: false,
+    });
   } else {
     if (result.public || req.query.password == result.password) {
-      res.send({ content: result, success: true });
+      res.status(200)
+      res.send({ code: 200, content: result, success: true });
     } else {
+      res.status(401);
       res.send({
+        code: 401,
         content: null,
         message: "The password provided was incorrect",
         success: false,
@@ -123,21 +144,32 @@ app.get("/api/v1/planner/pull/:oid", async (req, res) => {
   const oid = new ObjectID(req.params.oid);
   const data = await collection.findOne({ _id: oid });
   if (!data) {
-    res.send({ content: null, message: "Planner not found!", success: false });
+    res.status(404)
+    res.send({
+      code: 404,
+      content: null,
+      message: "Planner not found!",
+      success: false,
+    });
   } else {
     if (data.public || req.query.password == data.password) {
       const result = await collection.deleteOne({ _id: oid });
       if (result && result.deletedCount > 0) {
-        res.send({ content: result, success: true });
+        res.status(200)
+        res.send({ code: 200, content: result, success: true });
       } else {
+        res.status(500)
         res.send({
+          code: 500,
           content: null,
           message: "Deletion failed",
           success: false,
         });
       }
     } else {
+      res.status(401);
       res.send({
+        code: 401,
         content: null,
         message: "The password provided was incorrect",
         success: false,
@@ -153,7 +185,13 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
   const name = req.params.name;
   const data = await collection.findOne({ _id: oid });
   if (!data) {
-    res.send({ content: null, message: "Planner not found!", success: false });
+    res.status(404)
+    res.send({
+      code: 404,
+      content: null,
+      message: "Planner not found!",
+      success: false,
+    });
   } else {
     if (data.public || req.query.password == data.password) {
       const result = await collection.updateOne(
@@ -163,23 +201,30 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
       if (result && result.modifiedCount > 0) {
         const new_data = await collection.findOne({ _id: oid });
         if (!data) {
+          res.status(404)
           res.send({
+            code: 404,
             content: null,
             message: "Planner not found!",
             success: false,
           });
         } else {
-          res.send({ content: new_data, success: true });
+          res.status(200)
+          res.send({ code: 200, content: new_data, success: true });
         }
       } else {
+        res.status(500)
         res.send({
+          code: 500,
           content: null,
           message: "Deletion failed",
           success: false,
         });
       }
     } else {
+      res.status(401);
       res.send({
+        code: 401,
         content: null,
         message: "The password provided was incorrect",
         success: false,
