@@ -13,7 +13,11 @@ app.use(express.json());
 const port = 35053;
 
 const client = new MongoClient(
-  `mongodb+srv://${config.username}:${config.password}@${config.cluster}/planners?retryWrites=true&w=majority`,
+  `mongodb+srv://${process.env.PLANNITT_USERNAME || config.username}:${
+    process.env.PLANNITT_PASSWORD || config.password
+  }@${
+    process.env.PLANNITT_CLUSTER || config.cluster
+  }/planners?retryWrites=true&w=majority`,
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 client.connect();
