@@ -1,7 +1,9 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
 const ObjectID = require("mongodb").ObjectId;
-const config = require("./config.json");
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 const app = express();
 app.use(
@@ -13,11 +15,7 @@ app.use(express.json());
 const port = 35053;
 
 const client = new MongoClient(
-  `mongodb+srv://${process.env.PLANNITT_USERNAME || config.username}:${
-    process.env.PLANNITT_PASSWORD || config.password
-  }@${
-    process.env.PLANNITT_CLUSTER || config.cluster
-  }/planners?retryWrites=true&w=majority`,
+  `mongodb+srv://${process.env.PLANNITT_USERNAME}:${process.env.PLANNITT_PASSWORD}@${process.env.PLANNITT_CLUSTER}/planners?retryWrites=true&w=majority`,
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 client.connect();

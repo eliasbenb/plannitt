@@ -1,14 +1,9 @@
 {
   "name": "plannitt-server",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A collaborative timetable creator built for teams",
   "scripts": {
     "start": "node server.js"
-  },
-  "dependencies": {
-    "axios": "^0.21.1",
-    "express": "^4.17.1",
-    "mongodb": "^4.1.1"
   },
   "repository": {
     "type": "git",
