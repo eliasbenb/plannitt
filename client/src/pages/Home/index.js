@@ -178,7 +178,7 @@ export default class Home extends Component {
               variant="outlined"
               color="primary"
               size="large"
-              style={{ height: "100px", width: "300px" }}
+              style={{ height: "100px", width: "300px", maxWidth: "100%" }}
               startIcon={<AddCircleIcon />}
               onClick={this.onCreate}
             >
@@ -189,7 +189,7 @@ export default class Home extends Component {
             label="Planner Code"
             value={code || ""}
             onChange={this.onCodeChange}
-            style={{ width: "290px" }}
+            style={{ width: "290px", maxWidth: "100%" }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -203,7 +203,7 @@ export default class Home extends Component {
             color="primary"
             onClick={this.onCodeSearch}
             disabled={!isValid[0] ? true : false}
-            style={{ width: "135px", marginTop: "25px" }}
+            style={{ width: "135px", maxWidth: "100%", marginTop: "25px" }}
             startIcon={<ExitToAppIcon />}
           >
             Search
@@ -219,7 +219,7 @@ export default class Home extends Component {
               label="Planner Title"
               value={title || ""}
               onChange={this.onTitleChange}
-              style={{ width: "290px" }}
+              style={{ width: "290px", maxWidth: "100%" }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -234,7 +234,7 @@ export default class Home extends Component {
               label="Planner Password"
               value={password || ""}
               onChange={this.onPasswordChange}
-              style={{ width: "290px", marginBottom: "25px" }}
+              style={{ width: "290px", maxWidth: "100%", marginBottom: "25px" }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -272,7 +272,7 @@ export default class Home extends Component {
             variant="outlined"
             color="primary"
             disabled={isValid[1] && isValid[2] ? false : true}
-            style={{ height: "65px", width: "300px", marginTop: "100px" }}
+            style={{ height: "65px", width: "300px", maxWidth: "100%", marginTop: "100px" }}
             startIcon={<AddCircleIcon />}
             onClick={this.onCreateSubmit}
           >

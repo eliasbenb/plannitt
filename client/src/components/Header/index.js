@@ -14,7 +14,7 @@ export default class Header extends Component {
   render() {
     return (
       <Link to="/" className="no_decoration_link">
-        <Typography variant="h1" className="title">
+        <Typography variant="h1" className="header">
           plannitt
         </Typography>
       </Link>

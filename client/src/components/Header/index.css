@@ -4,3 +4,19 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.header {
+  background: -webkit-linear-gradient( 25deg, #00f2fe, #4facfe, #4197fe, #41fea6);
+  background-clip: text;
+  background-size: 300% auto;
+  animation: header 4s ease-in-out infinite alternate;
+  -webkit-background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes header {
+  to {
+    background-position: 300%;
+  }
+}

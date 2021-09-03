@@ -264,7 +264,7 @@ export default class Planner extends Component {
             margin: "25px 0 25px 0",
           }}
         >
-          <List style={{ width: "300px" }} dense={false}>
+          <List style={{ width: "300px", maxWidth: "100%" }} dense={false}>
             <ListItem>
               <ListItemText
                 primary={
@@ -347,7 +347,7 @@ export default class Planner extends Component {
               variant="outlined"
               color="primary"
               onClick={this.onDelete}
-              style={{ width: "135px" }}
+              style={{ width: "135px", maxWidth: "100%" }}
               startIcon={<DeleteIcon />}
             >
               Delete
@@ -358,7 +358,7 @@ export default class Planner extends Component {
               variant="outlined"
               color="primary"
               onClick={this.onCopyLink}
-              style={{ width: "135px" }}
+              style={{ width: "135px", maxWidth: "100%" }}
               startIcon={<LinkTwoToneIcon />}
             >
               Copy Link
@@ -373,7 +373,7 @@ export default class Planner extends Component {
           label="Password"
           value={password || ""}
           onChange={this.onPasswordChange}
-          style={{ width: "290px", margin: "25px 0 25px 0" }}
+          style={{ width: "290px", maxWidth: "100%", margin: "25px 0 25px 0" }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -387,7 +387,7 @@ export default class Planner extends Component {
           color="primary"
           onClick={this.onLogin}
           disabled={!isValid[1] ? true : false}
-          style={{ width: "135px" }}
+          style={{ width: "135px", maxWidth: "100%" }}
           startIcon={<ExitToAppIcon />}
         >
           Login
