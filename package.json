@@ -5,6 +5,7 @@
   "scripts": {
     "client": "cd client && yarn run start",
     "server": "cd server && yarn run start",
+    "setup": "cd ./client && yarn && cd ../server && yarn",
     "start": "concurrently \"yarn run client\" \"yarn run server\""
   },
   "devDependencies": {
@@ -24,5 +25,8 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/eliasbenb/plannitt/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
