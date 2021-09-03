@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SearchIcon from "@material-ui/icons/Search";
 import TitleIcon from "@material-ui/icons/Title";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
@@ -31,6 +32,7 @@ export default class Home extends Component {
       title: null,
     };
     this.onCodeChange = this.onCodeChange.bind(this);
+    this.onCodeSearch = this.onCodeSearch.bind(this);
     this.onCreate = this.onCreate.bind(this);
     this.onCreateSubmit = this.onCreateSubmit.bind(this);
     this.onMode = this.onMode.bind(this);
@@ -53,11 +55,17 @@ export default class Home extends Component {
     }
   }
 
+  onCodeSearch() {
+    let { code } = this.state;
+
+    this.props.history.push(`/planner/${code}`);
+  }
+
   onCreate() {
     this.setState({ isCreator: true });
   }
 
-  async onCreateSubmit() {
+  onCreateSubmit() {
     let { isPublic, mode, password, title } = this.state;
 
     var post_data;
@@ -190,6 +198,16 @@ export default class Home extends Component {
               ),
             }}
           />
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={this.onCodeSearch}
+            disabled={!isValid[0] ? true : false}
+            style={{ width: "135px", marginTop: "25px" }}
+            startIcon={<ExitToAppIcon />}
+          >
+            Search
+          </Button>
         </div>
       </div>
     ) : (
