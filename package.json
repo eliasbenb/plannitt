@@ -19,6 +19,10 @@
     "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3"
   },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "http-proxy-middleware": "^2.0.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eliasbenb/plannitt.git"
@@ -36,8 +40,5 @@
   },
   "engines": {
     "node": ">=16.0.0"
-  },
-  "devDependencies": {
-    "dotenv": "^10.0.0"
   }
 }
