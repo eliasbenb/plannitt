@@ -272,7 +272,12 @@ export default class Home extends Component {
             variant="outlined"
             color="primary"
             disabled={isValid[1] && isValid[2] ? false : true}
-            style={{ height: "65px", width: "300px", maxWidth: "100%", marginTop: "100px" }}
+            style={{
+              height: "65px",
+              width: "300px",
+              maxWidth: "100%",
+              marginTop: "100px",
+            }}
             startIcon={<AddCircleIcon />}
             onClick={this.onCreateSubmit}
           >
