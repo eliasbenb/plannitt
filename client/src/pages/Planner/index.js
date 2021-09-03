@@ -20,31 +20,41 @@ import {
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
 import axios from "axios";
 
 import { theme } from "../../components";
 
 import "./index.css";
-
 export default class Planner extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: null,
       isLoaded: false,
-      isValid: [false],
+      isLoggedIn: false,
+      isValid: [false, false],
       new_name: "",
+      password:
+        JSON.parse(window.localStorage.getItem("passwords") || "{}")[
+          this.props.match.params.oid
+        ] || "",
     };
     this.onAddUser = this.onAddUser.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onDeleteUser = this.onDeleteUser.bind(this);
+    this.onLogin = this.onLogin.bind(this);
     this.onNameChange = this.onNameChange.bind(this);
+    this.onPasswordChange = this.onPasswordChange.bind(this);
   }
 
   componentDidMount() {
+    let { password } = this.state;
+
     let req_path = `/api/v1/planner/get/${this.props.match.params.oid}`;
-    let req_args = "";
+    let req_args = `?password=${password}`;
 
     axios
       .get(req_path + req_args)
@@ -54,24 +64,30 @@ export default class Planner extends Component {
           this.setState({
             data: data.content,
             isLoaded: true,
+            isLoggedIn: true,
           });
         } else {
           window.alert(data.message || "Error!");
         }
       })
       .catch((error) => {
-        console.error(error);
         if (error.response) {
-          window.alert(error.response.message || "Error!");
+          if (error.response.status == 401) {
+            this.setState({ isLoaded: true, isLoggedIn: false });
+          } else {
+            console.error(error);
+            window.alert(error.response.data.message || "Error!");
+          }
         } else {
+          console.error(error);
           window.alert("Error!");
         }
       });
   }
 
   onAddUser() {
-    let { data, new_name } = this.state;
-    const oid = data._id;
+    let { new_name, password } = this.state;
+    const oid = this.props.match.params.oid;
 
     var post_data = {
       name: new_name,
@@ -79,7 +95,7 @@ export default class Planner extends Component {
     };
 
     let req_path = `/api/v1/planner/post/${oid}`;
-    let req_args = "";
+    let req_args = `?password=${password}`;
 
     axios
       .post(req_path + req_args, post_data)
@@ -102,11 +118,11 @@ export default class Planner extends Component {
   }
 
   onDelete() {
-    let { data } = this.state;
-    const oid = data._id;
+    let { password } = this.state;
+    const oid = this.props.match.params.oid;
 
     let req_path = `/api/v1/planner/pull/${oid}`;
-    let req_args = "";
+    let req_args = `?password=${password}`;
 
     axios
       .get(req_path + req_args)
@@ -124,12 +140,12 @@ export default class Planner extends Component {
   }
 
   onDeleteUser(n) {
-    let { data } = this.state;
-    const oid = data._id;
+    let { data, password } = this.state;
+    const oid = this.props.match.params.oid;
     const name = data.planners[n].name;
 
     let req_path = `/api/v1/planner/pull/${oid}/${name}`;
-    let req_args = "";
+    let req_args = `?password=${password}`;
 
     axios
       .get(req_path + req_args)
@@ -142,6 +158,47 @@ export default class Planner extends Component {
         if (error.response) {
           window.alert(error.response.message || "Error!");
         } else {
+          window.alert("Error!");
+        }
+      });
+  }
+
+  onLogin() {
+    let { password } = this.state;
+    const oid = this.props.match.params.oid;
+
+    let req_path = `/api/v1/planner/get/${oid}`;
+    let req_args = `?password=${password}`;
+
+    axios
+      .get(req_path + req_args)
+      .then((response) => {
+        let data = response.data;
+        if (data.success) {
+          let passwords = JSON.parse(
+            window.localStorage.getItem("passwords") || "{}"
+          );
+          passwords[oid] = password;
+          window.localStorage.setItem("passwords", JSON.stringify(passwords));
+          this.setState({
+            data: data.content,
+            isLoaded: true,
+            isLoggedIn: true,
+          });
+        } else {
+          window.alert(data.message || "Error!");
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status == 401) {
+            this.setState({ isLoaded: true, isLoggedIn: false });
+          } else {
+            console.error(error);
+            window.alert(error.response.data.message || "Error!");
+          }
+        } else {
+          console.error(error);
           window.alert("Error!");
         }
       });
@@ -161,9 +218,29 @@ export default class Planner extends Component {
     }
   }
 
+  onPasswordChange(evt) {
+    if (evt.target.value != this.state.password) {
+      if (evt.target.value) {
+        var isValid = this.state.isValid;
+        isValid[1] = true;
+        this.setState({ password: evt.target.value, isValid: isValid });
+      } else {
+        var isValid = this.state.isValid;
+        isValid[1] = false;
+        this.setState({ password: "", isValid: isValid });
+      }
+    }
+  }
+
   render() {
-    let { data, isLoaded, isValid, new_name } = this.state;
-    return isLoaded ? (
+    let { data, isLoaded, isLoggedIn, isValid, new_name, password } =
+      this.state;
+
+    return !isLoaded ? (
+      <div className="Loading">
+        <CircularProgress />
+      </div>
+    ) : isLoggedIn ? (
       <div className="page__container">
         <Typography variant="h1" className="title">
           plannitt
@@ -266,8 +343,33 @@ export default class Planner extends Component {
         </div>
       </div>
     ) : (
-      <div className="Loading">
-        <CircularProgress />
+      <div className="page__container">
+        <Typography variant="h1" className="title">
+          plannitt
+        </Typography>
+        <TextField
+          label="Password"
+          value={password || ""}
+          onChange={this.onPasswordChange}
+          style={{ width: "290px", margin: "25px 0 25px 0" }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <VpnKeyIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.onLogin}
+          disabled={!isValid[1] ? true : false}
+          style={{ width: "135px" }}
+          startIcon={<ExitToAppIcon />}
+        >
+          Login
+        </Button>
       </div>
     );
   }
