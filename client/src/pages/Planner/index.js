@@ -21,6 +21,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import LinkTwoToneIcon from "@material-ui/icons/LinkTwoTone";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
 import axios from "axios";
@@ -43,6 +44,7 @@ export default class Planner extends Component {
         ] || "",
     };
     this.onAddUser = this.onAddUser.bind(this);
+    this.onCopyLink = this.onCopyLink.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onDeleteUser = this.onDeleteUser.bind(this);
     this.onLogin = this.onLogin.bind(this);
@@ -122,6 +124,12 @@ export default class Planner extends Component {
           window.alert("Error!");
         }
       });
+  }
+
+  onCopyLink() {
+    navigator.clipboard
+      .writeText(window.location.href)
+      .then(() => alert("The URL was successfully copied to your clipboard."));
   }
 
   onDelete() {
@@ -343,6 +351,17 @@ export default class Planner extends Component {
               startIcon={<DeleteIcon />}
             >
               Delete
+            </Button>
+          </div>
+          <div className="button">
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={this.onCopyLink}
+              style={{ width: "135px" }}
+              startIcon={<LinkTwoToneIcon />}
+            >
+              Copy Link
             </Button>
           </div>
         </div>
