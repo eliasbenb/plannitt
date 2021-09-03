@@ -230,52 +230,54 @@ export default class Home extends Component {
           >
             Search
           </Button>
-          <div
-            style={{
-              backgroundColor: theme.palette.background.paper,
-              border: "2px solid #111",
-              borderRadius: "10px",
-              margin: "25px 0 25px 0",
-            }}
-          >
-            <List style={{ width: "300px", maxWidth: "100%" }} dense={false}>
-              <ListItem>
-                <ListItemText
-                  primary={
-                    <Typography variant="h5" style={{ textAlign: "center" }}>
-                      Recent Planners
-                    </Typography>
-                  }
-                />
-              </ListItem>
-              <Divider />
-              {recent_planners
-                ? Object.keys(recent_planners)
-                    .splice(-5)
-                    .map((k, n) => (
-                      <ListItem key={`planner-${n}`}>
-                        <Link
-                          to={`/planner/${recent_planners[k]._id}`}
-                          className="no_decoration_link"
-                        >
-                          <ListItemAvatar>
-                            <Avatar>
-                              <TodayRoundedIcon />
-                            </Avatar>
-                          </ListItemAvatar>
-                        </Link>
-                        <Link
-                          to={`/planner/${recent_planners[k]._id}`}
-                          className="no_decoration_link"
-                        >
-                          <ListItemText primary={recent_planners[k].title} />
-                        </Link>
-                      </ListItem>
-                    ))
-                    .reverse()
-                : null}
-            </List>
-          </div>
+          {Object.keys(recent_planners).length ? (
+            <div
+              style={{
+                backgroundColor: theme.palette.background.paper,
+                border: "2px solid #111",
+                borderRadius: "10px",
+                margin: "25px 0 25px 0",
+              }}
+            >
+              <List style={{ width: "300px", maxWidth: "100%" }} dense={false}>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <Typography variant="h5" style={{ textAlign: "center" }}>
+                        Recent Planners
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+                <Divider />
+                {recent_planners
+                  ? Object.keys(recent_planners)
+                      .splice(-5)
+                      .map((k, n) => (
+                        <ListItem key={`planner-${n}`}>
+                          <Link
+                            to={`/planner/${recent_planners[k]._id}`}
+                            className="no_decoration_link"
+                          >
+                            <ListItemAvatar>
+                              <Avatar>
+                                <TodayRoundedIcon />
+                              </Avatar>
+                            </ListItemAvatar>
+                          </Link>
+                          <Link
+                            to={`/planner/${recent_planners[k]._id}`}
+                            className="no_decoration_link"
+                          >
+                            <ListItemText primary={recent_planners[k].title} />
+                          </Link>
+                        </ListItem>
+                      ))
+                      .reverse()
+                  : null}
+              </List>
+            </div>
+          ) : null}
         </div>
       </div>
     ) : (
