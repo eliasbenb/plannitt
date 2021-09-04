@@ -5,7 +5,9 @@
   "scripts": {
     "client": "yarn --cwd client run start",
     "server": "yarn --cwd server run start",
-    "start": "concurrently \"yarn run client\" \"yarn run server\""
+    "build": "yarn --cwd client run build",
+    "start": "yarn server",
+    "dev": "concurrently \"yarn run client\" \"yarn run server\""
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",

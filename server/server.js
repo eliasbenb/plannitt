@@ -1,4 +1,6 @@
 const express = require("express");
+const path = require("path");
+const package = require("./package.json");
 const { MongoClient } = require("mongodb");
 const ObjectID = require("mongodb").ObjectId;
 if (process.env.NODE_ENV !== "production") {
@@ -12,6 +14,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../client/build")));
 const port = 35053;
 
 const client = new MongoClient(
@@ -22,7 +25,32 @@ client.connect();
 const database = client.db("planners");
 const collection = database.collection("main");
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+const colors = {
+  HEADER: "\033[95m",
+  OKBLUE: "\033[94m",
+  OKGREEN: "\033[92m",
+  WARNING: "\033[93m",
+  FAIL: "\033[91m",
+  OKCYAN: "\033[36m",
+  UNDERLINE: "\033[4m",
+  BOLD: "\033[1m",
+  RESET: "\033[0m",
+};
+
+app.listen(port, () => {
+  process.stdout.write("\u001b[3J\u001b[1J");
+  console.clear();
+  console.log(`
+${colors.OKGREEN}Served successfully!${colors.RESET}
+
+You can now view ${colors.BOLD}plannitt-server${colors.RESET} in the browser.
+
+  ${colors.BOLD}Local:${colors.RESET} http://localhost:${colors.BOLD}${port}${colors.RESET}
+
+Make sure that a build folder is present in ../client.
+If not, run ${colors.OKCYAN}yarn run build${colors.RESET} first
+`);
+});
 
 app.post("/api/v1/planner/post", async (req, res) => {
   console.log(req.url);
