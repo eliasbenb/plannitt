@@ -269,7 +269,13 @@ export default class Home extends Component {
                             to={`/planner/${recent_planners[k]._id}`}
                             className="no_decoration_link"
                           >
-                            <ListItemText primary={recent_planners[k].title} />
+                            <ListItemText
+                              primary={
+                                <Typography className="recent_planner">
+                                  {recent_planners[k].title}
+                                </Typography>
+                              }
+                            />
                           </Link>
                         </ListItem>
                       ))

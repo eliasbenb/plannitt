@@ -1,0 +1,7 @@
+.recent_planner {
+  width: 10.75rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}

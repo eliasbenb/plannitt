@@ -58,7 +58,7 @@ export default class Planner extends Component {
     const oid = this.props.match.params.oid;
 
     let req_path = `/api/v1/planner/get/${oid}`;
-    let req_args = `?password=${encodeURIComponent(password)}`;
+    let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
       .get(req_path + req_args)
@@ -119,7 +119,7 @@ export default class Planner extends Component {
     };
 
     let req_path = `/api/v1/planner/post/${oid}`;
-    let req_args = `?password=${encodeURIComponent(password)}`;
+    let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
       .post(req_path + req_args, post_data)
@@ -152,7 +152,7 @@ export default class Planner extends Component {
     const oid = this.props.match.params.oid;
 
     let req_path = `/api/v1/planner/pull/${oid}`;
-    let req_args = `?password=${encodeURIComponent(password)}`;
+    let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
       .get(req_path + req_args)
@@ -183,7 +183,7 @@ export default class Planner extends Component {
     const name = data.planners[n].name;
 
     let req_path = `/api/v1/planner/pull/${oid}/${name}`;
-    let req_args = `?password=${encodeURIComponent(password)}`;
+    let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
       .get(req_path + req_args)
@@ -206,7 +206,7 @@ export default class Planner extends Component {
     const oid = this.props.match.params.oid;
 
     let req_path = `/api/v1/planner/get/${oid}`;
-    let req_args = `?password=${encodeURIComponent(password)}`;
+    let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
       .get(req_path + req_args)

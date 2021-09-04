@@ -71,32 +71,42 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
       });
     } else {
       if (data.public || req.query.password == data.password) {
-        const result = await collection.updateOne(
-          { _id: oid },
-          { $push: { planners: post_data } }
-        );
-        if (result && result.modifiedCount > 0) {
-          const new_data = await collection.findOne({ _id: oid });
-          if (!new_data) {
-            res.status(404);
-            res.send({
-              code: 404,
-              content: null,
-              message: "Planner not found!",
-              success: false,
-            });
-          } else {
-            res.status(200);
-            res.send({ code: 200, content: new_data, success: true });
-          }
-        } else {
-          res.status(500);
+        if (data.planners.some((i) => i.name == req.body.name)) {
+          res.status(409);
           res.send({
-            code: 500,
+            code: 409,
             content: null,
-            message: "Deletion failed",
+            message: "That name already exists in this planner",
             success: false,
           });
+        } else {
+          const result = await collection.updateOne(
+            { _id: oid },
+            { $push: { planners: post_data } }
+          );
+          if (result && result.modifiedCount > 0) {
+            const new_data = await collection.findOne({ _id: oid });
+            if (!new_data) {
+              res.status(404);
+              res.send({
+                code: 404,
+                content: null,
+                message: "Planner not found!",
+                success: false,
+              });
+            } else {
+              res.status(200);
+              res.send({ code: 200, content: new_data, success: true });
+            }
+          } else {
+            res.status(500);
+            res.send({
+              code: 500,
+              content: null,
+              message: "Deletion failed",
+              success: false,
+            });
+          }
         }
       } else {
         res.status(401);
