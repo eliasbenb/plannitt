@@ -292,6 +292,8 @@ export default class Planner extends Component {
         <div
           style={{
             backgroundColor: theme.palette.background.paper,
+            border: "2px solid #111",
+            borderRadius: "10px",
             margin: "25px 0 25px 0",
           }}
         >
@@ -299,7 +301,11 @@ export default class Planner extends Component {
             <ListItem>
               <ListItemText
                 primary={
-                  <Typography variant="h5" style={{ textAlign: "center" }}>
+                  <Typography
+                    variant="h5"
+                    className="user_name"
+                    style={{ textAlign: "center", width: "100%" }}
+                  >
                     {data.title}
                   </Typography>
                 }
@@ -320,7 +326,14 @@ export default class Planner extends Component {
                       to={`/planner/${data._id}/${n}`}
                       className="no_decoration_link"
                     >
-                      <ListItemText primary={planner.name} />
+                      <ListItemText
+                        style={{ width: "10rem" }}
+                        primary={
+                          <Typography className="user_name">
+                            {planner.name}
+                          </Typography>
+                        }
+                      />
                     </Link>
                     <ListItemSecondaryAction>
                       <IconButton
