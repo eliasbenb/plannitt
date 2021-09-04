@@ -14,7 +14,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client/build")));
-const port = 35053;
+const port = process.env.PORT || 35053;
 
 const client = new MongoClient(
   `mongodb+srv://${process.env.PLANNITT_USERNAME}:${process.env.PLANNITT_PASSWORD}@${process.env.PLANNITT_CLUSTER}/planners?retryWrites=true&w=majority`,
