@@ -319,15 +319,16 @@ export default class Planner extends Component {
             {data.planners.length
               ? data.planners.map((planner, n) => (
                   <ListItem key={`user-${n}`}>
-                    <Link to={`/planner/${data._id}/${n}`}>
+                    <Link
+                      to={`/planner/${data._id}/${planner.name}`}
+                      className="no_decoration_link"
+                    >
                       <ListItemAvatar>
-                        <Avatar>
-                          <AccountCircleIcon />
-                        </Avatar>
+                        <Avatar>{planner.name.charAt(0).toUpperCase()}</Avatar>
                       </ListItemAvatar>
                     </Link>
                     <Link
-                      to={`/planner/${data._id}/${n}`}
+                      to={`/planner/${data._id}/${planner.name}`}
                       className="no_decoration_link"
                     >
                       <ListItemText
