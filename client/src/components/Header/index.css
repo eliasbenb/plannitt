@@ -9,9 +9,14 @@
   background-clip: text;
   background-size: 300% auto;
   animation: header 4s ease-in-out infinite alternate;
+  transition: transform 0.3s;
   -webkit-background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.header:hover {
+  transform: scale(1.05);
 }
 
 @keyframes header {

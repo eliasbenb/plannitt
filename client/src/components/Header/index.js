@@ -13,11 +13,22 @@ export default class Header extends Component {
 
   render() {
     return (
-      <Link to="/" className="no_decoration_link">
-        <Typography variant="h1" className="header">
-          plannitt
-        </Typography>
-      </Link>
+      <div>
+        <Link to="/" className="no_decoration_link">
+          <Typography variant="h1" className="header">
+            plannitt
+          </Typography>
+        </Link>
+        <a href="https://eliasbenb.cf" className="no_decoration_link">
+          <Typography
+            variant="body1"
+            className="header"
+            style={{ float: "right", marginTop: "-15px" }}
+          >
+            eliasbenb
+          </Typography>
+        </a>
+      </div>
     );
   }
 }
