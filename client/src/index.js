@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import { guid, Home, Planner, theme } from "./components";
+import { guid, Home, Planner, theme, User } from "./components";
 
 import "./index.css";
 
@@ -23,6 +23,11 @@ ReactDOM.render(
           exact
           path={"/planner/:oid"}
           render={(props) => <Planner key={guid()} {...props} />}
+        />
+        <Route
+          exact
+          path={"/planner/:oid/:user"}
+          render={(props) => <User key={guid()} {...props} />}
         />
       </Switch>
     </ThemeProvider>

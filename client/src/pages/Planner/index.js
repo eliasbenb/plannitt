@@ -38,6 +38,7 @@ export default class Planner extends Component {
       isLoggedIn: false,
       isValid: [false, false],
       new_name: "",
+      oid: this.props.match.params.oid,
       password: (
         JSON.parse(window.localStorage.getItem("recent_planners") || "{}")[
           this.props.match.params.oid
@@ -55,8 +56,7 @@ export default class Planner extends Component {
   }
 
   componentDidMount() {
-    let { password } = this.state;
-    const oid = this.props.match.params.oid;
+    let { oid, password } = this.state;
 
     let req_path = `/api/v1/planner/get/${oid}`;
     let req_args = `?password=${encodeURIComponent(password || "")}`;
@@ -116,8 +116,7 @@ export default class Planner extends Component {
   }
 
   onAddUser() {
-    let { new_name, password } = this.state;
-    const oid = this.props.match.params.oid;
+    let { new_name, oid, password } = this.state;
 
     var post_data = {
       name: new_name,
@@ -156,8 +155,7 @@ export default class Planner extends Component {
   }
 
   onDelete() {
-    let { password } = this.state;
-    const oid = this.props.match.params.oid;
+    let { oid, password } = this.state;
 
     if (!this.confirmAlert("Are you sure you want to delete this planner?")) {
       return;
@@ -190,17 +188,16 @@ export default class Planner extends Component {
   }
 
   onDeleteUser(n) {
-    let { data, password } = this.state;
-    const oid = this.props.match.params.oid;
-    const name = data.planners[n].name;
+    let { data, oid, password } = this.state;
+    const user = data.planners[n].name;
 
     if (
-      !this.confirmAlert(`Are you sure you want to delete the user '${name}'?`)
+      !this.confirmAlert(`Are you sure you want to delete the user '${user}'?`)
     ) {
       return;
     }
 
-    let req_path = `/api/v1/planner/pull/${oid}/${name}`;
+    let req_path = `/api/v1/planner/pull/${oid}/${user}`;
     let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
@@ -220,8 +217,7 @@ export default class Planner extends Component {
   }
 
   onLogin() {
-    let { password } = this.state;
-    const oid = this.props.match.params.oid;
+    let { oid, password } = this.state;
 
     let req_path = `/api/v1/planner/get/${oid}`;
     let req_args = `?password=${encodeURIComponent(password || "")}`;
