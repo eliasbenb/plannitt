@@ -58,7 +58,7 @@ export default class Planner extends Component {
     const oid = this.props.match.params.oid;
 
     let req_path = `/api/v1/planner/get/${oid}`;
-    let req_args = `?password=${password}`;
+    let req_args = `?password=${encodeURIComponent(password)}`;
 
     axios
       .get(req_path + req_args)
@@ -119,7 +119,7 @@ export default class Planner extends Component {
     };
 
     let req_path = `/api/v1/planner/post/${oid}`;
-    let req_args = `?password=${password}`;
+    let req_args = `?password=${encodeURIComponent(password)}`;
 
     axios
       .post(req_path + req_args, post_data)
@@ -152,7 +152,7 @@ export default class Planner extends Component {
     const oid = this.props.match.params.oid;
 
     let req_path = `/api/v1/planner/pull/${oid}`;
-    let req_args = `?password=${password}`;
+    let req_args = `?password=${encodeURIComponent(password)}`;
 
     axios
       .get(req_path + req_args)
@@ -183,7 +183,7 @@ export default class Planner extends Component {
     const name = data.planners[n].name;
 
     let req_path = `/api/v1/planner/pull/${oid}/${name}`;
-    let req_args = `?password=${password}`;
+    let req_args = `?password=${encodeURIComponent(password)}`;
 
     axios
       .get(req_path + req_args)
@@ -206,7 +206,7 @@ export default class Planner extends Component {
     const oid = this.props.match.params.oid;
 
     let req_path = `/api/v1/planner/get/${oid}`;
-    let req_args = `?password=${password}`;
+    let req_args = `?password=${encodeURIComponent(password)}`;
 
     axios
       .get(req_path + req_args)
@@ -254,7 +254,11 @@ export default class Planner extends Component {
     if (evt.target.value != this.state.new_name) {
       if (evt.target.value) {
         var isValid = this.state.isValid;
-        isValid[0] = true;
+        if (this.state.data.planners.some((i) => i.name == evt.target.value)) {
+          isValid[0] = false;
+        } else {
+          isValid[0] = true;
+        }
         this.setState({ new_name: evt.target.value, isValid: isValid });
       } else {
         var isValid = this.state.isValid;
