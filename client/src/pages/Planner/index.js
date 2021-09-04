@@ -44,6 +44,7 @@ export default class Planner extends Component {
         ] || {}
       ).password,
     };
+    this.confirmAlert = this.confirmAlert.bind(this);
     this.onAddUser = this.onAddUser.bind(this);
     this.onCopyLink = this.onCopyLink.bind(this);
     this.onDelete = this.onDelete.bind(this);
@@ -109,6 +110,11 @@ export default class Planner extends Component {
       });
   }
 
+  confirmAlert(evt) {
+    var confirmation = window.confirm(evt);
+    return confirmation;
+  }
+
   onAddUser() {
     let { new_name, password } = this.state;
     const oid = this.props.match.params.oid;
@@ -144,12 +150,18 @@ export default class Planner extends Component {
   onCopyLink() {
     navigator.clipboard
       .writeText(window.location.href)
-      .then(() => alert("The URL was successfully copied to your clipboard."));
+      .then(() =>
+        window.alert("The URL was successfully copied to your clipboard.")
+      );
   }
 
   onDelete() {
     let { password } = this.state;
     const oid = this.props.match.params.oid;
+
+    if (!this.confirmAlert("Are you sure you want to delete this planner?")) {
+      return;
+    }
 
     let req_path = `/api/v1/planner/pull/${oid}`;
     let req_args = `?password=${encodeURIComponent(password || "")}`;
@@ -181,6 +193,12 @@ export default class Planner extends Component {
     let { data, password } = this.state;
     const oid = this.props.match.params.oid;
     const name = data.planners[n].name;
+
+    if (
+      !this.confirmAlert(`Are you sure you want to delete the user '${name}'?`)
+    ) {
+      return;
+    }
 
     let req_path = `/api/v1/planner/pull/${oid}/${name}`;
     let req_args = `?password=${encodeURIComponent(password || "")}`;
