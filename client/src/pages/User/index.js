@@ -1,36 +1,101 @@
 import React, { Component } from "react";
 
+import { CircularProgress } from "@material-ui/core";
+
 import axios from "axios";
 
-export default class User extends Component {
+import { Header, theme } from "../../components";
+export class User {
+  constructor(data, update) {
+    this._id = data._id;
+    this.data = data;
+    this.name = data.name;
+    this.times = [];
+    this.init();
+    this.update = update;
+  }
+
+  init() {
+    for (let i = 0; i < this.data.times.length; i++) {
+      let time = new Time(this.data.times[i]);
+      this.times.push(time);
+    }
+    this.sort();
+  }
+
+  sort() {
+    const len = this.times.length;
+    for (let i = 0; i < len - 1; i++) {
+      for (let j = 0; j < len - i - 1; j++) {
+        if (this.times[j].start > this.times[j + 1].start) {
+          let swap = this.times[j];
+          this.times[j] = this.times[j + 1];
+          this.times[j + 1] = swap;
+        }
+      }
+    }
+  }
+
+  pushTime(start, end) {
+    this.times.push(new Time({ start: start, end: end }));
+    this.sort();
+    this.update();
+  }
+
+  pullTime(n) {
+    this.times.splice(n, 1);
+    this.update();
+  }
+}
+
+export class Time {
+  constructor(data) {
+    this.data = data;
+    this.end = data.end;
+    this.start = data.start;
+  }
+
+  pushEnd(end) {
+    this.end = end;
+  }
+
+  pushStart(start) {
+    this.start = start;
+  }
+}
+
+export default class UserPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: this.props.match.params.user,
+      data: null,
+      isLoaded: false,
+      name: this.props.match.params.user,
       oid: this.props.match.params.oid,
       password: (
         JSON.parse(window.localStorage.getItem("recent_planners") || "{}")[
           this.props.match.params.oid
         ] || {}
       ).password,
+      update: false,
+      user: null,
     };
+
+    this.update = this.update.bind(this);
   }
 
   componentDidMount() {
-    let { user, oid, password } = this.state;
+    let { name, oid, password } = this.state;
 
-    if (!password) {
-      this.props.history.push(`/planner/${oid}`);
-    }
-
-    let req_path = `/api/v1/planner/get/${oid}/${user}`;
+    let req_path = `/api/v1/planner/get/${oid}/${name}`;
     let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
       .get(req_path + req_args)
       .then((response) => {
         let data = response.data.content;
-        this.setState({ data: data });
+        let user = new User(data, this.update);
+        this.setState({ data: data, isLoaded: true, user: user });
       })
       .catch((error) => {
         console.error(error);
@@ -42,7 +107,21 @@ export default class User extends Component {
       });
   }
 
+  update() {
+    this.setState({ update: !update });
+  }
+
   render() {
-    return <div></div>;
+    let { isLoaded, user } = this.state;
+
+    return isLoaded ? (
+      <div className="page__container">
+        <Header />
+      </div>
+    ) : (
+      <div className="Loading">
+        <CircularProgress />
+      </div>
+    );
   }
 }
