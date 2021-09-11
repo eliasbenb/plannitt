@@ -89,7 +89,7 @@ export default class Home extends Component {
       post_data = {
         mode: mode,
         password: password,
-        planners: [],
+        users: [],
         public: false,
         title: title,
         type: "group",
@@ -98,7 +98,7 @@ export default class Home extends Component {
       post_data = {
         mode: mode,
         password: null,
-        planners: [],
+        users: [],
         public: true,
         title: title,
         type: "group",

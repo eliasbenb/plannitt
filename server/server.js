@@ -33,7 +33,7 @@ app.post("/api/v1/planner/post", async (req, res) => {
     mode:
       req.body.mode in ["calendar", "timetable"] ? req.body.mode : "timetable",
     password: req.body.password,
-    planners: [],
+    users: [],
     public: req.body.public,
     title: req.body.title,
     type: "group",
@@ -74,7 +74,7 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
       });
     } else {
       if (data.public || req.query.password == data.password) {
-        if (data.planners.some((i) => i.name == req.body.name)) {
+        if (data.users.some((i) => i.name == req.body.name)) {
           res.status(409);
           res.send({
             code: 409,
@@ -85,7 +85,7 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
         } else {
           const result = await collection.updateOne(
             { _id: oid },
-            { $push: { planners: post_data } }
+            { $push: { users: post_data } }
           );
           if (result && result.modifiedCount > 0) {
             const new_data = await collection.findOne({ _id: oid });
@@ -187,7 +187,7 @@ app.get("/api/v1/planner/get/:oid/:name", async (req, res) => {
       });
     } else {
       if (data.public || req.query.password == data.password) {
-        const result = data.planners.find((i) => i.name == req.params.name);
+        const result = data.users.find((i) => i.name == req.params.name);
         if (result) {
           res.status(200);
           res.send({ code: 200, content: result, success: true });
@@ -289,7 +289,7 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
       if (data.public || req.query.password == data.password) {
         const result = await collection.updateOne(
           { _id: oid },
-          { $pull: { planners: { name: name } } }
+          { $pull: { users: { name: name } } }
         );
         if (result && result.modifiedCount > 0) {
           const new_data = await collection.findOne({ _id: oid });
