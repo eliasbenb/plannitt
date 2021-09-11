@@ -53,6 +53,7 @@ export default class Planner extends Component {
     this.onLogin = this.onLogin.bind(this);
     this.onNameChange = this.onNameChange.bind(this);
     this.onPasswordChange = this.onPasswordChange.bind(this);
+    this.sortUsers = this.sortUsers.bind(this);
   }
 
   componentDidMount() {
@@ -84,6 +85,7 @@ export default class Planner extends Component {
             isLoaded: true,
             isLoggedIn: true,
           });
+          this.sortUsers();
         } else {
           window.alert(data.message || "Error!");
         }
@@ -132,6 +134,7 @@ export default class Planner extends Component {
         let data = response.data;
         if (data.success) {
           this.setState({ data: data.content, new_name: "" });
+          this.sortUsers();
         } else {
           window.alert(data.message || "Error!");
         }
@@ -189,7 +192,7 @@ export default class Planner extends Component {
 
   onDeleteUser(n) {
     let { data, oid, password } = this.state;
-    const user = data.planners[n].name;
+    const user = data.users[n].name;
 
     if (
       !this.confirmAlert(`Are you sure you want to delete the user '${user}'?`)
@@ -268,7 +271,7 @@ export default class Planner extends Component {
     if (evt.target.value != this.state.new_name) {
       if (evt.target.value) {
         var isValid = this.state.isValid;
-        if (this.state.data.planners.some((i) => i.name == evt.target.value)) {
+        if (this.state.data.users.some((i) => i.name == evt.target.value)) {
           isValid[0] = false;
         } else {
           isValid[0] = true;
@@ -294,6 +297,22 @@ export default class Planner extends Component {
         this.setState({ password: "", isValid: isValid });
       }
     }
+  }
+
+  sortUsers() {
+    let { data } = this.state;
+
+    const len = data.users.length;
+    for (let i = 0; i < len - 1; i++) {
+      for (let j = 0; j < len - i - 1; j++) {
+        if (data.users[j].name > data.users[j + 1].name) {
+          let swap = data.users[j];
+          data.users[j] = data.users[j + 1];
+          data.users[j + 1] = swap;
+        }
+      }
+    }
+    this.setState({ data: data });
   }
 
   render() {
@@ -330,8 +349,8 @@ export default class Planner extends Component {
               />
             </ListItem>
             <Divider />
-            {data.planners.length
-              ? data.planners.map((planner, n) => (
+            {data.users.length
+              ? data.users.map((planner, n) => (
                   <ListItem key={`user-${n}`}>
                     <Link
                       to={`/planner/${data._id}/${planner.name}`}
@@ -366,7 +385,7 @@ export default class Planner extends Component {
                   </ListItem>
                 ))
               : null}
-            {data.planners.length ? (
+            {data.users.length ? (
               <Divider style={{ marginTop: "10px" }} />
             ) : null}
             <ListItem>
