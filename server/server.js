@@ -30,8 +30,7 @@ app.post("/api/v1/planner/post", async (req, res) => {
   console.log(req.url);
 
   const data = {
-    mode:
-      req.body.mode in ["calendar", "timetable"] ? req.body.mode : "timetable",
+    mode: req.body.mode == "calendar" ? "calendar" : "timetable",
     password: req.body.password,
     users: [],
     public: req.body.public,
@@ -190,7 +189,12 @@ app.get("/api/v1/planner/get/:oid/:name", async (req, res) => {
         const result = data.users.find((i) => i.name == req.params.name);
         if (result) {
           res.status(200);
-          res.send({ code: 200, content: result, success: true });
+          res.send({
+            code: 200,
+            content: result,
+            mode: data.mode,
+            success: true,
+          });
         } else {
           res.status(404);
           res.send({
