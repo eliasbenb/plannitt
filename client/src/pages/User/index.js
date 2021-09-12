@@ -116,7 +116,10 @@ export default class UserPage extends Component {
 
     return isLoaded ? (
       <div className="page__container">
-        <Header />
+        <Header
+          goBack={this.props.history.goBack}
+          goForward={this.props.history.goForward}
+        />
       </div>
     ) : (
       <div className="Loading">

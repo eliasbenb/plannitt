@@ -16,11 +16,16 @@
 }
 
 .header:hover {
-  transform: scale(1.05);
+  transform: scale(1.025);
 }
 
 @keyframes header {
   to {
     background-position: 300%;
   }
+}
+
+.header_container {
+  display: flex;
+  flex-direction: row;
 }

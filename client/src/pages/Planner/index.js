@@ -325,7 +325,10 @@ export default class Planner extends Component {
       </div>
     ) : isLoggedIn ? (
       <div className="page__container">
-        <Header />
+        <Header
+          goBack={this.props.history.goBack}
+          goForward={this.props.history.goForward}
+        />
         <div
           style={{
             backgroundColor: theme.palette.background.paper,
@@ -450,7 +453,10 @@ export default class Planner extends Component {
       </div>
     ) : (
       <div className="page__container">
-        <Header />
+        <Header
+          goBack={this.props.history.goBack}
+          goForward={this.props.history.goForward}
+        />
         <TextField
           label="Password"
           value={password || ""}
