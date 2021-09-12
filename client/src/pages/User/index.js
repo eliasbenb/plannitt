@@ -1,10 +1,16 @@
 import React, { Component } from "react";
 
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
+
+import { Calendar } from "react-modern-calendar-datepicker";
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
 
 import axios from "axios";
 
 import { Header, theme } from "../../components";
+import "./index.css";
+
 export class User {
   constructor(data, update) {
     this._id = data._id;
@@ -69,7 +75,9 @@ export default class UserPage extends Component {
     super(props);
     this.state = {
       data: null,
+      days: [],
       isLoaded: false,
+      mode: null,
       name: this.props.match.params.user,
       oid: this.props.match.params.oid,
       password: (
@@ -82,6 +90,7 @@ export default class UserPage extends Component {
     };
 
     this.update = this.update.bind(this);
+    this.onDaysChange = this.onDaysChange.bind(this);
   }
 
   componentDidMount() {
@@ -94,8 +103,9 @@ export default class UserPage extends Component {
       .get(req_path + req_args)
       .then((response) => {
         let data = response.data.content;
+        let mode = response.data.mode;
         let user = new User(data, this.update);
-        this.setState({ data: data, isLoaded: true, user: user });
+        this.setState({ data: data, isLoaded: true, mode: mode, user: user });
       })
       .catch((error) => {
         console.error(error);
@@ -111,10 +121,47 @@ export default class UserPage extends Component {
     this.setState({ update: !update });
   }
 
-  render() {
-    let { isLoaded, user } = this.state;
+  onDaysChange(evt) {
+    this.setState({ days: evt });
+  }
 
-    return isLoaded ? (
+  render() {
+    let { days, isLoaded, mode, user } = this.state;
+
+    return isLoaded && mode == "calendar" ? (
+      <div className="page__container">
+        <Header
+          goBack={this.props.history.goBack}
+          goForward={this.props.history.goForward}
+        />
+        <div>
+          <Typography
+            variant="h4"
+            style={{
+              textAlign: "center",
+              width: "100%",
+              margin: "15px 0 20px 0",
+            }}
+          >
+            {user.name}
+          </Typography>
+          <Calendar
+            value={days}
+            onChange={this.onDaysChange}
+            colorPrimary={theme.palette.primary.main}
+            slideAnimationDuration="0.2s"
+          />
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            severity="info"
+            style={{ marginTop: "30px" }}
+          >
+            Select the dates when you are available.
+          </MuiAlert>
+        </div>
+      </div>
+    ) : isLoaded ? (
       <div className="page__container">
         <Header
           goBack={this.props.history.goBack}
