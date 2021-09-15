@@ -21,6 +21,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import FunctionsIcon from "@material-ui/icons/Functions";
 import LinkTwoToneIcon from "@material-ui/icons/LinkTwoTone";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
@@ -47,6 +48,7 @@ export default class Planner extends Component {
     };
     this.confirmAlert = this.confirmAlert.bind(this);
     this.onAddUser = this.onAddUser.bind(this);
+    this.onCalculateTime = this.onCalculateTime.bind(this);
     this.onCopyLink = this.onCopyLink.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onDeleteUser = this.onDeleteUser.bind(this);
@@ -147,6 +149,40 @@ export default class Planner extends Component {
           window.alert("Error!");
         }
       });
+  }
+
+  onCalculateTime() {
+    let {data, mode} = this.state;
+
+    var users_len = data.users.length;
+    var same_days = [];
+    if (mode == "calendar") {
+      for (let i = 0; i < users_len; i++) {
+        for (let j = 0; j < data.users[i].times.length; j++) {
+          let time = data.users[i].times[j]
+          if (time in same_days.key()) {
+            same_days[time] = same_days[time] + 1;
+          } else {
+            same_days[time] = 1;
+          }
+        }
+      }
+    }
+
+    console.log(same_days)
+
+    var highest = 0;
+    var most_compatible = [];
+    var same_days_key = same_days.keys();
+    var same_days_val = same_days.values();
+    for (let i = 0; i < same_days.length; i++) {
+      if (same_days_val[i] == highest) {
+        most_compatible.append(same_days[same_days_key[i]])
+      } else if (same_days_val[i] > highest) {
+        most_compatible = [same_days[same_days_key[i]]]
+      }
+    }
+    console.log(most_compatible)
   }
 
   onCopyLink() {
@@ -353,25 +389,25 @@ export default class Planner extends Component {
             </ListItem>
             <Divider />
             {data.users.length
-              ? data.users.map((planner, n) => (
+              ? data.users.map((user, n) => (
                   <ListItem key={`user-${n}`}>
                     <Link
-                      to={`/planner/${data._id}/${planner.name}`}
+                      to={`/planner/${data._id}/${user.name}`}
                       className="no_decoration_link"
                     >
                       <ListItemAvatar>
-                        <Avatar>{planner.name.charAt(0).toUpperCase()}</Avatar>
+                        <Avatar>{user.name.charAt(0).toUpperCase()}</Avatar>
                       </ListItemAvatar>
                     </Link>
                     <Link
-                      to={`/planner/${data._id}/${planner.name}`}
+                      to={`/planner/${data._id}/${user.name}`}
                       className="no_decoration_link"
                     >
                       <ListItemText
                         style={{ width: "10rem" }}
                         primary={
                           <Typography className="user_name">
-                            {planner.name}
+                            {user.name}
                           </Typography>
                         }
                       />
@@ -447,6 +483,17 @@ export default class Planner extends Component {
               startIcon={<LinkTwoToneIcon />}
             >
               Copy Link
+            </Button>
+          </div>
+          <div className="button">
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={this.onCalculateTime}
+              style={{ width: "135px", maxWidth: "100%" }}
+              startIcon={<FunctionsIcon />}
+            >
+              Calculate Time
             </Button>
           </div>
         </div>

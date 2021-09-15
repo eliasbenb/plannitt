@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 
-import { CircularProgress, Typography } from "@material-ui/core";
+import { Button, CircularProgress, Typography } from "@material-ui/core";
 import MuiAlert from "@material-ui/lab/Alert";
+import BackupIcon from "@material-ui/icons/Backup";
 
-import { Calendar } from "react-modern-calendar-datepicker";
+import { Calendar, utils } from "react-modern-calendar-datepicker";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 
 import axios from "axios";
@@ -12,61 +13,62 @@ import { Header, theme } from "../../components";
 import "./index.css";
 
 export class User {
-  constructor(data, update) {
+  constructor(data, mode, update) {
     this._id = data._id;
     this.data = data;
+    this.mode = mode;
     this.name = data.name;
-    this.times = [];
-    this.init();
+    this.times = this.data.times;
     this.update = update;
+    this.init();
   }
 
   init() {
-    for (let i = 0; i < this.data.times.length; i++) {
-      let time = new Time(this.data.times[i]);
-      this.times.push(time);
-    }
     this.sort();
+    this.update();
   }
 
   sort() {
     const len = this.times.length;
-    for (let i = 0; i < len - 1; i++) {
-      for (let j = 0; j < len - i - 1; j++) {
-        if (this.times[j].start > this.times[j + 1].start) {
-          let swap = this.times[j];
-          this.times[j] = this.times[j + 1];
-          this.times[j + 1] = swap;
+    if (this.mode == "calendar") {
+      for (let i = 0; i < len - 1; i++) {
+        for (let j = 0; j < len - 1; j++) {
+          if (utils().isBeforeDate(this.times[j + 1], this.times[j])) {
+            let swap = this.times[j];
+            this.times[j] = this.times[j + 1];
+            this.times[j + 1] = swap;
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < len - 1; i++) {
+        for (let j = 0; j < len - 1; j++) {
+          if (this.times[j] > this.times[j + 1]) {
+            let swap = this.times[j];
+            this.times[j] = this.times[j + 1];
+            this.times[j + 1] = swap;
+          }
         }
       }
     }
   }
 
-  pushTime(start, end) {
-    this.times.push(new Time({ start: start, end: end }));
+  postTime(data) {
+    if (this.mode == "calendar") {
+      this.times = data;
+    } else {
+      this.times.push(data);
+    }
     this.sort();
     this.update();
   }
 
   pullTime(n) {
-    this.times.splice(n, 1);
-    this.update();
-  }
-}
-
-export class Time {
-  constructor(data) {
-    this.data = data;
-    this.end = data.end;
-    this.start = data.start;
-  }
-
-  pushEnd(end) {
-    this.end = end;
-  }
-
-  pushStart(start) {
-    this.start = start;
+    if (this.mode == "calenar") {
+    } else {
+      this.times.splice(n, 1);
+      this.update();
+    }
   }
 }
 
@@ -91,6 +93,7 @@ export default class UserPage extends Component {
 
     this.update = this.update.bind(this);
     this.onDaysChange = this.onDaysChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -104,8 +107,14 @@ export default class UserPage extends Component {
       .then((response) => {
         let data = response.data.content;
         let mode = response.data.mode;
-        let user = new User(data, this.update);
-        this.setState({ data: data, isLoaded: true, mode: mode, user: user });
+        let user = new User(data, mode, this.update);
+        this.setState({
+          data: data,
+          days: user.times,
+          isLoaded: true,
+          mode: mode,
+          user: user,
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -118,11 +127,39 @@ export default class UserPage extends Component {
   }
 
   update() {
-    this.setState({ update: !update });
+    this.setState({ update: !this.state.update });
   }
 
   onDaysChange(evt) {
     this.setState({ days: evt });
+  }
+
+  onSubmit() {
+    let { days, name, oid, password } = this.state;
+
+    this.state.user.postTime(days);
+
+    let req_path = `/api/v1/planner/post/${oid}/${name}`;
+    let req_args = `?password=${encodeURIComponent(password || "")}`;
+
+    axios
+      .post(req_path + req_args, this.state.user.times)
+      .then((response) => {
+        let data = response.data;
+        if (data.success) {
+          this.setState({ data: data.content });
+        } else {
+          window.alert(data.message || "Error!");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error.response) {
+          window.alert(error.response.message || "Error!");
+        } else {
+          window.alert("Error!");
+        }
+      });
   }
 
   render() {
@@ -134,7 +171,13 @@ export default class UserPage extends Component {
           goBack={this.props.history.goBack}
           goForward={this.props.history.goForward}
         />
-        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
           <Typography
             variant="h4"
             style={{
@@ -159,6 +202,20 @@ export default class UserPage extends Component {
           >
             Select the dates when you are available.
           </MuiAlert>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.onSubmit}
+            startIcon={<BackupIcon />}
+            style={{
+              width: "150px",
+              height: "50px",
+              alignSelf: "center",
+              marginTop: "25px",
+            }}
+          >
+            Submit
+          </Button>
         </div>
       </div>
     ) : isLoaded ? (
