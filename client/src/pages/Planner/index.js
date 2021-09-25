@@ -38,6 +38,7 @@ export default class Planner extends Component {
       isLoaded: false,
       isLoggedIn: false,
       isValid: [false, false],
+      mode: null,
       new_name: "",
       oid: this.props.match.params.oid,
       password: (
@@ -86,6 +87,7 @@ export default class Planner extends Component {
             data: data.content,
             isLoaded: true,
             isLoggedIn: true,
+            mode: data.content.mode,
           });
           this.sortUsers();
         } else {
@@ -152,37 +154,49 @@ export default class Planner extends Component {
   }
 
   onCalculateTime() {
-    let {data, mode} = this.state;
+    let { data, mode } = this.state;
 
-    var users_len = data.users.length;
+    const users_len = data.users.length;
     var same_days = [];
     if (mode == "calendar") {
       for (let i = 0; i < users_len; i++) {
         for (let j = 0; j < data.users[i].times.length; j++) {
-          let time = data.users[i].times[j]
-          if (time in same_days.key()) {
-            same_days[time] = same_days[time] + 1;
+          let time = data.users[i].times[j];
+          let time_str = `${time.month}-${time.day}-${time.year}`;
+          if (time_str in same_days) {
+            same_days[time_str] = same_days[time_str] + 1;
           } else {
-            same_days[time] = 1;
+            same_days[time_str] = 1;
           }
         }
       }
     }
 
-    console.log(same_days)
-
     var highest = 0;
     var most_compatible = [];
-    var same_days_key = same_days.keys();
-    var same_days_val = same_days.values();
-    for (let i = 0; i < same_days.length; i++) {
-      if (same_days_val[i] == highest) {
-        most_compatible.append(same_days[same_days_key[i]])
-      } else if (same_days_val[i] > highest) {
-        most_compatible = [same_days[same_days_key[i]]]
+    for (let key in same_days) {
+      if (same_days[key] == highest) {
+        most_compatible.push(key);
+      } else if (same_days[key] 
+        > highest) {
+        most_compatible = [key];
+        highest += 1;
       }
     }
-    console.log(most_compatible)
+
+    var alert_str = "";
+    for (let i = 0; i < most_compatible.length; i++) {
+      let date = new Date(most_compatible[i]);
+      most_compatible[i] = date;
+      alert_str +=
+        date.toLocaleDateString(undefined, {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }) + "\n";
+    }
+    alert(alert_str);
   }
 
   onCopyLink() {
@@ -493,7 +507,7 @@ export default class Planner extends Component {
               style={{ width: "135px", maxWidth: "100%" }}
               startIcon={<FunctionsIcon />}
             >
-              Calculate Time
+              Calculate
             </Button>
           </div>
         </div>
