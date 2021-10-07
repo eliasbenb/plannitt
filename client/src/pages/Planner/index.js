@@ -25,6 +25,9 @@ import FunctionsIcon from "@material-ui/icons/Functions";
 import LinkTwoToneIcon from "@material-ui/icons/LinkTwoTone";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
+import { Calendar, utils } from "react-modern-calendar-datepicker";
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+
 import axios from "axios";
 
 import { Header, theme } from "../../components";
@@ -35,6 +38,7 @@ export default class Planner extends Component {
     super(props);
     this.state = {
       data: null,
+      isCalculated: false,
       isLoaded: false,
       isLoggedIn: false,
       isValid: [false, false],
@@ -158,12 +162,21 @@ export default class Planner extends Component {
 
     const users_len = data.users.length;
     var same_days = [];
+    var highest = 0;
+    var most_compatible = [];
     if (mode == "calendar") {
       for (let i = 0; i < users_len; i++) {
         for (let j = 0; j < data.users[i].times.length; j++) {
           let time = data.users[i].times[j];
           let time_str = `${time.month}-${time.day}-${time.year}`;
           if (time_str in same_days) {
+            if (same_days[time_str] > highest) {
+              highest = same_days[time_str];
+              most_compatible = [];
+              most_compatible.push(time_str);
+            } else if (same_days == highest) {
+              most_compatible.push(time_str);
+            }
             same_days[time_str] = same_days[time_str] + 1;
           } else {
             same_days[time_str] = 1;
@@ -172,23 +185,16 @@ export default class Planner extends Component {
       }
     }
 
-    var highest = 0;
-    var most_compatible = [];
-    for (let key in same_days) {
-      if (same_days[key] == highest) {
-        most_compatible.push(key);
-      } else if (same_days[key] > highest) {
-        most_compatible = [key];
-        highest = same_days[key];
-      }
-    }
-
     var alert_str = `Compatibility Score: ${highest}/${users_len}\n\n`;
-    var final_dates = [];
+    var days = [];
     for (let i = 0; i < most_compatible.length; i++) {
       let date = new Date(most_compatible[i]);
       if (date > new Date()) {
-        final_dates.push(date);
+        days.push({
+          day: date.getDay(),
+          month: date.getMonth(),
+          year: date.getFullYear(),
+        });
         alert_str +=
           date.toLocaleDateString(undefined, {
             weekday: "long",
@@ -198,6 +204,7 @@ export default class Planner extends Component {
           }) + "\n";
       }
     }
+    this.setState({ days: days, isCalculated: true });
     alert(alert_str);
   }
 
@@ -368,8 +375,17 @@ export default class Planner extends Component {
   }
 
   render() {
-    let { data, isLoaded, isLoggedIn, isValid, new_name, password } =
-      this.state;
+    let {
+      data,
+      days,
+      isCalculated,
+      isLoaded,
+      isLoggedIn,
+      isValid,
+      mode,
+      new_name,
+      password,
+    } = this.state;
 
     return !isLoaded ? (
       <div className="Loading">
@@ -389,7 +405,7 @@ export default class Planner extends Component {
             margin: "25px 0 25px 0",
           }}
         >
-          <List style={{ width: "300px", maxWidth: "100%" }} dense={false}>
+          <List style={{ width: "330px", maxWidth: "100%" }} dense={false}>
             <ListItem>
               <ListItemText
                 primary={
@@ -478,6 +494,16 @@ export default class Planner extends Component {
             </ListItem>
           </List>
         </div>
+        {isCalculated && mode == "calendar" ? (
+          <div style={{ marginBottom: "25px" }}>
+            <Calendar
+              value={days}
+              colorPrimary={theme.palette.primary.main}
+              slide
+              maximumDate={0}
+            ></Calendar>
+          </div>
+        ) : null}
         <div style={{ display: "flex" }}>
           <div className="button">
             <Button

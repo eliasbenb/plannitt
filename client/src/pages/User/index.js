@@ -9,7 +9,7 @@ import "react-modern-calendar-datepicker/lib/DatePicker.css";
 
 import axios from "axios";
 
-import { Header, theme } from "../../components";
+import { Header, theme, Timetable } from "../../components";
 import "./index.css";
 
 export class User {
@@ -225,6 +225,24 @@ export default class UserPage extends Component {
           goBack={this.props.history.goBack}
           goForward={this.props.history.goForward}
         />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="h4"
+            style={{
+              textAlign: "center",
+              width: "100%",
+              margin: "15px 0 20px 0",
+            }}
+          >
+            {user.name}
+          </Typography>
+        </div>
       </div>
     ) : (
       <div className="Loading">

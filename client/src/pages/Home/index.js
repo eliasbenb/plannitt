@@ -204,7 +204,7 @@ export default class Home extends Component {
               variant="outlined"
               color="primary"
               size="large"
-              style={{ height: "100px", width: "300px", maxWidth: "100%" }}
+              style={{ height: "100px", width: "330px", maxWidth: "100%" }}
               startIcon={<AddCircleIcon />}
               onClick={this.onCreate}
             >
@@ -243,7 +243,7 @@ export default class Home extends Component {
                 margin: "25px 0 25px 0",
               }}
             >
-              <List style={{ width: "300px", maxWidth: "100%" }} dense={false}>
+              <List style={{ width: "330px", maxWidth: "100%" }} dense={false}>
                 <ListItem>
                   <ListItemText
                     primary={
@@ -357,7 +357,7 @@ export default class Home extends Component {
             disabled={isValid[1] && isValid[2] ? false : true}
             style={{
               height: "65px",
-              width: "300px",
+              width: "330px",
               maxWidth: "100%",
               marginTop: "100px",
             }}
