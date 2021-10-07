@@ -177,24 +177,26 @@ export default class Planner extends Component {
     for (let key in same_days) {
       if (same_days[key] == highest) {
         most_compatible.push(key);
-      } else if (same_days[key] 
-        > highest) {
+      } else if (same_days[key] > highest) {
         most_compatible = [key];
-        highest += 1;
+        highest = same_days[key];
       }
     }
 
-    var alert_str = "";
+    var alert_str = `Compatibility Score: ${highest}/${users_len}\n\n`;
+    var final_dates = [];
     for (let i = 0; i < most_compatible.length; i++) {
       let date = new Date(most_compatible[i]);
-      most_compatible[i] = date;
-      alert_str +=
-        date.toLocaleDateString(undefined, {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }) + "\n";
+      if (date > new Date()) {
+        final_dates.push(date);
+        alert_str +=
+          date.toLocaleDateString(undefined, {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }) + "\n";
+      }
     }
     alert(alert_str);
   }

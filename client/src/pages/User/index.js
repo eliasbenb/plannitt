@@ -147,6 +147,7 @@ export default class UserPage extends Component {
       .then((response) => {
         let data = response.data;
         if (data.success) {
+          alert("Data submitted successfully.");
           this.setState({ data: data.content });
         } else {
           window.alert(data.message || "Error!");
