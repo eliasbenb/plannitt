@@ -12,7 +12,7 @@ import axios from "axios";
 import { Header, theme, Timetable } from "../../components";
 import "./index.css";
 
-export class User {
+export class CalendarUser {
   constructor(data, mode, update) {
     this._id = data._id;
     this.data = data;
@@ -30,44 +30,102 @@ export class User {
 
   sort() {
     const len = this.times.length;
-    if (this.mode == "calendar") {
-      for (let i = 0; i < len - 1; i++) {
-        for (let j = 0; j < len - 1; j++) {
-          if (utils().isBeforeDate(this.times[j + 1], this.times[j])) {
-            let swap = this.times[j];
-            this.times[j] = this.times[j + 1];
-            this.times[j + 1] = swap;
-          }
-        }
-      }
-    } else {
-      for (let i = 0; i < len - 1; i++) {
-        for (let j = 0; j < len - 1; j++) {
-          if (this.times[j] > this.times[j + 1]) {
-            let swap = this.times[j];
-            this.times[j] = this.times[j + 1];
-            this.times[j + 1] = swap;
-          }
+    for (let i = 0; i < len - 1; i++) {
+      for (let j = 0; j < len - 1; j++) {
+        if (utils().isBeforeDate(this.times[j + 1], this.times[j])) {
+          let swap = this.times[j];
+          this.times[j] = this.times[j + 1];
+          this.times[j + 1] = swap;
         }
       }
     }
   }
 
   postTime(data) {
-    if (this.mode == "calendar") {
-      this.times = data;
-    } else {
-      this.times.push(data);
+    this.times = data;
+    this.sort();
+    this.update();
+  }
+}
+
+export class TimetableNode {
+  constructor(data) {
+    this.data = { day: data.day, hour: data.hour, time: data.time };
+    this.next = null;
+  }
+}
+
+export class TimetableUser {
+  constructor(data, mode, update) {
+    this._id = data._id;
+    this.data = data;
+    this.head = null;
+    this.mode = mode;
+    this.name = data.name;
+    this.times = this.data.times;
+    this.update = update;
+    this.init();
+  }
+
+  init() {
+    this.sort();
+    if (this.times.length) {
+      this.head = new TimetableNode(this.times[0]);
+      var node = this.head;
+      for (let i = 1; i < this.times.length; i++) {
+        node.next = new TimetableNode(this.times[i]);
+        node = node.next;
+      }
     }
+    console.log(this.head);
+    this.update();
+  }
+
+  postTime(data) {
+    this.times.append(data);
     this.sort();
     this.update();
   }
 
-  pullTime(n) {
-    if (this.mode == "calenar") {
-    } else {
-      this.times.splice(n, 1);
-      this.update();
+  find(value) {
+    var node = this.head;
+    value = JSON.stringify(value);
+    while (node) {
+      if (JSON.stringify(node.data) == value) {
+        return true;
+      } else {
+        node = node.next;
+      }
+    }
+    return false;
+  }
+
+  insert(value) {
+    var node = this.head;
+  }
+
+  sort() {
+    const len = this.times.length;
+    for (let i = 0; i < len - 1; i++) {
+      for (let j = 0; j < len - 1; j++) {
+        if (this.times[j + 1].day < this.times[j].day) {
+          let swap = this.times[j];
+          this.times[j] = this.times[j + 1];
+          this.times[j + 1] = swap;
+        }
+      }
+    }
+    for (let i = 0; i < len - 1; i++) {
+      for (let j = 0; j < len - 1; j++) {
+        if (
+          this.times[j + 1].day == this.times[j].day &&
+          this.times[j + 1].hour < this.times[j].hour
+        ) {
+          let swap = this.times[j];
+          this.times[j] = this.times[j + 1];
+          this.times[j + 1] = swap;
+        }
+      }
     }
   }
 }
@@ -94,6 +152,7 @@ export default class UserPage extends Component {
     this.update = this.update.bind(this);
     this.onDaysChange = this.onDaysChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onSelectDay = this.onSelectDay.bind(this);
   }
 
   componentDidMount() {
@@ -107,7 +166,11 @@ export default class UserPage extends Component {
       .then((response) => {
         let data = response.data.content;
         let mode = response.data.mode;
-        let user = new User(data, mode, this.update);
+        if (mode == "calendar") {
+          var user = new CalendarUser(data, mode, this.update);
+        } else {
+          var user = new TimetableUser(data, mode, this.update);
+        }
         this.setState({
           data: data,
           days: user.times,
@@ -132,6 +195,21 @@ export default class UserPage extends Component {
 
   onDaysChange(evt) {
     this.setState({ days: evt });
+  }
+
+  onSelectDay(day_number, hour, time) {
+    const day_list = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    let day = day_list[day_number];
+    let data = { day: day, hour: hour, time: time };
+    this.setState({ days: [...this.state.days, data] });
   }
 
   onSubmit() {
@@ -190,7 +268,7 @@ export default class UserPage extends Component {
             {user.name}
           </Typography>
           <Calendar
-            value={days}
+            value={user.times}
             onChange={this.onDaysChange}
             colorPrimary={theme.palette.primary.main}
             slideAnimationDuration="0.2s"
@@ -242,6 +320,66 @@ export default class UserPage extends Component {
           >
             {user.name}
           </Typography>
+          <div className="timetable">
+            <table>
+              <thead>
+                <tr>
+                  <td></td>
+                  <th>Sunday</th>
+                  <th>Monday</th>
+                  <th>Tuesday</th>
+                  <th>Wednesday</th>
+                  <th>Thursday</th>
+                  <th>Friday</th>
+                  <th>Saturday</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  "6:00 AM",
+                  "7:00 AM",
+                  "8:00 AM",
+                  "9:00 AM",
+                  "10:00 AM",
+                  "11:00 AM",
+                  "12:00 PM",
+                  "1:00 PM",
+                  "2:00 PM",
+                  "3:00 PM",
+                  "4:00 PM",
+                  "5:00 PM",
+                  "6:00 PM",
+                ].map((t, n) => (
+                  <tr key={`${n}-${t}`}>
+                    <td className="heading">{t}</td>
+                    {[
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ].map((a, b) =>
+                      user.find({ day: a, hour: n + 6, time: t }) ? (
+                        <td
+                          onClick={() => this.onSelectDay(b, n + 6, t)}
+                          key={a}
+                        >
+                          ✔️
+                        </td>
+                      ) : (
+                        <td
+                          onClick={() => this.onSelectDay(b, n + 6, t)}
+                          key={a}
+                        ></td>
+                      )
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     ) : (
