@@ -43,6 +43,6 @@
     "url": "https://github.com/eliasbenb/plannitt/issues"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": "16.x|15.x|14.x"
   }
 }
