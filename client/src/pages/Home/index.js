@@ -229,7 +229,7 @@ export default class Home extends Component {
             style={{ width: "135px", maxWidth: "100%", marginTop: "25px" }}
             startIcon={<ExitToAppIcon />}
           >
-            Search
+            Go!
           </Button>
           {Object.keys(recent_planners).length ? (
             <div

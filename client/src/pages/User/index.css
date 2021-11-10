@@ -1,16 +1,21 @@
 .timetable {
   width: 90vw;
   max-width: 800px;
-  overflow-x: scroll;
+  overflow-y: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 table {
-  border-collapse: collapse; 
+  border-collapse: collapse;
   border-right-color: #ffffff;
-  width: 100%;
+  width: 800px;
+  margin-bottom: 0;
+  max-width: none;
 }
 
-th, td {
+th,
+td {
   border: 1px solid #fff;
   padding: 16px 12px;
   text-align: center;
@@ -25,13 +30,13 @@ th {
 
 .heading {
   background-color: #4197fe;
-  color: #fff; 
+  color: #fff;
 }
 
-tbody tr:nth-child(odd){
+tbody tr:nth-child(odd) {
   background-color: #292929;
 }
 
-tbody tr:nth-child(even){
+tbody tr:nth-child(even) {
   background-color: #5a5a5a;
 }

@@ -437,6 +437,8 @@ export default class Planner extends Component {
             border: "2px solid #111",
             borderRadius: "10px",
             margin: "25px 0 25px 0",
+            width: "330px",
+            maxWidth: "90%",
           }}
         >
           <List style={{ width: "330px", maxWidth: "100%" }} dense={false}>
@@ -538,7 +540,13 @@ export default class Planner extends Component {
             ></Calendar>
           </div>
         ) : null}
-        <div style={{ display: "flex" }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
           <div className="button">
             <Button
               variant="outlined"

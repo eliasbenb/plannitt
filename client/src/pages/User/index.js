@@ -295,7 +295,7 @@ export default class UserPage extends Component {
               width: "150px",
               height: "50px",
               alignSelf: "center",
-              marginTop: "25px",
+              margin: "25px",
             }}
           >
             Submit
@@ -408,7 +408,7 @@ export default class UserPage extends Component {
               width: "150px",
               height: "50px",
               alignSelf: "center",
-              marginTop: "25px",
+              margin: "25px",
             }}
           >
             Submit
