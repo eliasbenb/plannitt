@@ -195,10 +195,7 @@ export default class Home extends Component {
     return !isCreator ? (
       <div className="Home">
         <div className="page__container">
-          <Header
-            goBack={this.props.history.goBack}
-            goForward={this.props.history.goForward}
-          />
+          <Header goBack={this.props.history.goBack} />
           <div style={{ margin: "25px 0 25px 0" }}>
             <Button
               variant="outlined"
@@ -293,10 +290,7 @@ export default class Home extends Component {
     ) : (
       <div className="Home">
         <div className="page__container">
-          <Header
-            goBack={this.props.history.goBack}
-            goForward={this.props.history.goForward}
-          />
+          <Header goBack={this.props.history.goBack} />
           <div style={{ margin: "25px 0 25px 0" }}>
             <TextField
               label="Planner Title"

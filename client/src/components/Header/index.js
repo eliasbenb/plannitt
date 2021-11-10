@@ -2,11 +2,10 @@ import React, { Component } from "react";
 
 import { Link } from "react-router-dom";
 
-import { Avatar, IconButton, Typography } from "@material-ui/core";
+import { IconButton, Typography } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
-import { theme } from "../../components";
 import "./index.css";
 
 export default class Header extends Component {
@@ -17,11 +16,6 @@ export default class Header extends Component {
   render() {
     return (
       <div className="header_container">
-        <IconButton onClick={this.props.goBack} style={{ marginRight: "20px" }}>
-          <Avatar style={{ backgroundColor: theme.palette.secondary.main }}>
-            <ArrowBackIcon />
-          </Avatar>
-        </IconButton>
         <div>
           <Link to="/" className="no_decoration_link">
             <Typography variant="h1" className="header">
@@ -37,15 +31,12 @@ export default class Header extends Component {
               eliasbenb
             </Typography>
           </a>
+          <div style={{ float: "right", marginTop: "-20px" }}>
+            <IconButton onClick={this.props.goBack}>
+              <ArrowBackIcon />
+            </IconButton>
+          </div>
         </div>
-        <IconButton
-          onClick={this.props.goForward}
-          style={{ marginLeft: "20px" }}
-        >
-          <Avatar style={{ backgroundColor: theme.palette.secondary.main }}>
-            <ArrowForwardIcon />
-          </Avatar>
-        </IconButton>
       </div>
     );
   }

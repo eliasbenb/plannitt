@@ -254,10 +254,7 @@ export default class UserPage extends Component {
 
     return isLoaded && mode == "calendar" ? (
       <div className="page__container">
-        <Header
-          goBack={this.props.history.goBack}
-          goForward={this.props.history.goForward}
-        />
+        <Header goBack={this.props.history.goBack} />
         <div
           style={{
             display: "flex",
@@ -307,10 +304,7 @@ export default class UserPage extends Component {
       </div>
     ) : isLoaded ? (
       <div className="page__container">
-        <Header
-          goBack={this.props.history.goBack}
-          goForward={this.props.history.goForward}
-        />
+        <Header goBack={this.props.history.goBack} />
         <div
           style={{
             display: "flex",
