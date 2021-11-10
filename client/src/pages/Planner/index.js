@@ -102,10 +102,21 @@ export default class Planner extends Component {
         if (error.response) {
           if (error.response.status == 401) {
             this.setState({ isLoaded: true, isLoggedIn: false });
-          } else if (
-            error.response.status == 404 ||
-            error.response.status == 400
-          ) {
+          } else if (error.response.status == 404) {
+            console.error(error);
+            let recent_planners = JSON.parse(
+              window.localStorage.getItem("recent_planners") || "{}"
+            );
+            if (recent_planners[oid]) {
+              delete recent_planners[oid];
+              window.localStorage.setItem(
+                "recent_planners",
+                JSON.stringify(recent_planners)
+              );
+            }
+            window.alert(error.response.data.message || "Error!");
+            this.props.history.push("/");
+          } else if (error.response.status == 400) {
             console.error(error);
             window.alert(error.response.data.message || "Error!");
             this.props.history.push("/");
@@ -174,7 +185,8 @@ export default class Planner extends Component {
               highest = same_days[time_str];
               most_compatible = [];
               most_compatible.push(time_str);
-            } else if (same_days == highest) {
+            } else if (same_days[time_str] == highest) {
+              highest += 1;
               most_compatible.push(time_str);
             }
             same_days[time_str] = same_days[time_str] + 1;
@@ -186,18 +198,19 @@ export default class Planner extends Component {
     } else {
       for (let i = 0; i < users_len; i++) {
         for (let j = 0; j < data.users[i].times.length; j++) {
-          let unix_time = data.users[i].times[j].unix_time;
-          if (unix_time in same_days) {
-            if (same_days[unix_time] > highest) {
-              highest = same_days[unix_time];
+          let time = data.users[i].times[j].time;
+          if (time in same_days) {
+            if (same_days[time] > highest) {
+              highest = same_days[time];
               most_compatible = [];
-              most_compatible.push(unix_time);
-            } else if (same_days == highest) {
-              most_compatible.push(unix_time);
+              most_compatible.push(time);
+            } else if (same_days[time] == highest) {
+              highest += 1;
+              most_compatible.push(time);
             }
-            same_days[unix_time] = same_days[unix_time] + 1;
+            same_days[time] = same_days[time] + 1;
           } else {
-            same_days[unix_time] = 1;
+            same_days[time] = 1;
           }
         }
       }
@@ -205,15 +218,6 @@ export default class Planner extends Component {
 
     var alert_str = `Compatibility Score: ${highest}/${users_len}\n\n`;
     var days = [];
-    const day_list = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
     if (mode == "calendar") {
       for (let i = 0; i < most_compatible.length; i++) {
         let date = new Date(most_compatible[i]);
@@ -234,11 +238,7 @@ export default class Planner extends Component {
       }
     } else {
       for (let i = 0; i < most_compatible.length; i++) {
-        let day_index = Math.ceil(most_compatible[i] / 3600 / 24);
-        let day = day_list[day_index - 1];
-        console.log(day)
-        let hour = day_index * 24 - most_compatible[i] / 3600;
-        alert_str += `${day}, ${hour}${hour < 6 ? ("AM") : "PM"}` + "\n";
+        alert_str += most_compatible[i] + "\n";
       }
     }
     this.setState({ days: days, isCalculated: true });

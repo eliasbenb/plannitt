@@ -68,6 +68,7 @@ export class TimetableUser {
     this.times.push({
       day: value.day,
       hour: value.hour,
+      time: value.time,
       unix_time: value.unix_time,
     });
     this.update();
@@ -383,6 +384,7 @@ export default class UserPage extends Component {
                             user.add({
                               day: a,
                               hour: n + 6,
+                              time: `${a}, ${n + 6} ${n < 6 ? "AM" : "PM"}`,
                               unix_time: this.unixify({ day: a, hour: n + 6 }),
                             })
                           }
