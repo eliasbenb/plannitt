@@ -50,7 +50,11 @@ export class CalendarUser {
 
 export class TimetableNode {
   constructor(data) {
-    this.data = { day: data.day, hour: data.hour, time: data.time };
+    this.data = data;
+    this.day = data.day;
+    this.hour = data.hour;
+    this.time = data.time;
+    this.unix_time = data.unix_time;
     this.next = null;
   }
 }
@@ -64,11 +68,13 @@ export class TimetableUser {
     this.name = data.name;
     this.times = this.data.times;
     this.update = update;
+    this.size = null;
     this.init();
   }
 
   init() {
     this.sort();
+    this.size = this.times.length;
     if (this.times.length) {
       this.head = new TimetableNode(this.times[0]);
       var node = this.head;
@@ -77,50 +83,176 @@ export class TimetableUser {
         node = node.next;
       }
     }
-    console.log(this.head);
     this.update();
   }
 
-  postTime(data) {
-    this.times.append(data);
-    this.sort();
-    this.update();
+  last() {
+    var node = this.head;
+    while (node) {
+      if (node.next) {
+        node = node.next;
+      }
+    }
+    return node;
   }
 
   find(value) {
     var node = this.head;
-    value = JSON.stringify(value);
+    var count = 0;
     while (node) {
-      if (JSON.stringify(node.data) == value) {
-        return true;
+      if (node.unix_time == value) {
+        return count;
       } else {
         node = node.next;
       }
+      count++;
     }
-    return false;
+    return null;
   }
 
-  insert(value) {
-    var node = this.head;
+  unixify(value) {
+    const day_list = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    var day_index = day_list.indexOf(value.day, 0);
+    var unix_time = (day_index * 24 + value.hour) * 3600;
+    return unix_time;
+  }
+
+  add(element) {
+    // creates a new node
+    var node = new TimetableNode(element);
+    // to store current node
+    var current;
+
+    // if list is Empty add the
+    // element and make it head
+    if (this.head == null) this.head = node;
+    else {
+      current = this.head;
+
+      // iterate to the end of the
+      // list
+      while (current.next) {
+        current = current.next;
+      }
+
+      // add node
+      current.next = node;
+    }
+    this.size++;
+  }
+
+  insertAt(element, index) {
+    if (index < 0 || index > this.size)
+      return console.log("Please enter a valid index.");
+    else {
+      // creates a new node
+      var node = new TimetableNode(element);
+      var curr, prev;
+
+      curr = this.head;
+
+      // add the element to the
+      // first index
+      if (index == 0) {
+        node.next = this.head;
+        this.head = node;
+      } else {
+        curr = this.head;
+        var it = 0;
+
+        // iterate over the list to find
+        // the position to insert
+        while (it < index) {
+          it++;
+          prev = curr;
+          curr = curr.next;
+        }
+
+        // adding an element
+        node.next = curr;
+        prev.next = node;
+      }
+      this.size++;
+    }
+  }
+
+  removeFrom(index) {
+    if (index < 0 || index >= this.size)
+      return console.log("Please Enter a valid index");
+    else {
+      var curr,
+        prev,
+        it = 0;
+      curr = this.head;
+      prev = curr;
+
+      // deleting first element
+      if (index === 0) {
+        this.head = curr.next;
+      } else {
+        // iterate over the list to the
+        // position to removce an element
+        while (it < index) {
+          it++;
+          prev = curr;
+          curr = curr.next;
+        }
+
+        // remove the element
+        prev.next = curr.next;
+      }
+      this.size--;
+
+      // return the remove element
+      return curr.element;
+    }
+  }
+
+  removeElement(element) {
+    var current = this.head;
+    var prev = null;
+
+    // iterate over the list
+    while (current != null) {
+      // comparing element with current
+      // element if found then remove the
+      // and return true
+      if (current.element === element) {
+        if (prev == null) {
+          this.head = current.next;
+        } else {
+          prev.next = current.next;
+        }
+        this.size--;
+        return current.element;
+      }
+      prev = current;
+      current = current.next;
+    }
+    return -1;
+  }
+
+  isEmpty() {
+    return this.size == 0;
+  }
+
+  size_of_list() {
+    console.log(this.size);
   }
 
   sort() {
     const len = this.times.length;
     for (let i = 0; i < len - 1; i++) {
       for (let j = 0; j < len - 1; j++) {
-        if (this.times[j + 1].day < this.times[j].day) {
-          let swap = this.times[j];
-          this.times[j] = this.times[j + 1];
-          this.times[j + 1] = swap;
-        }
-      }
-    }
-    for (let i = 0; i < len - 1; i++) {
-      for (let j = 0; j < len - 1; j++) {
-        if (
-          this.times[j + 1].day == this.times[j].day &&
-          this.times[j + 1].hour < this.times[j].hour
-        ) {
+        if (this.times[j + 1].unix_time < this.times[j].unix_time) {
           let swap = this.times[j];
           this.times[j] = this.times[j + 1];
           this.times[j + 1] = swap;
@@ -361,16 +493,20 @@ export default class UserPage extends Component {
                       "Friday",
                       "Saturday",
                     ].map((a, b) =>
-                      user.find({ day: a, hour: n + 6, time: t }) ? (
+                      user.find(
+                        user.unixify({ day: a, hour: n + 6, time: t })
+                      ) ? (
                         <td
-                          onClick={() => this.onSelectDay(b, n + 6, t)}
+                          onClick={() => user.onSelectDay(b, n + 6, t)}
                           key={a}
                         >
                           ✔️
                         </td>
                       ) : (
                         <td
-                          onClick={() => this.onSelectDay(b, n + 6, t)}
+                          onClick={() =>
+                            user.add({ day: a, hour: n + 6, time: t })
+                          }
                           key={a}
                         ></td>
                       )

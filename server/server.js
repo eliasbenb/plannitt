@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 const port = process.env.PORT || 35053;
 
 const client = new MongoClient(
-  `mongodb+srv://${process.env.PLANNITT_USERNAME}:${process.env.PLANNITT_PASSWORD}@${process.env.PLANNITT_CLUSTER}/planners?retryWrites=true&w=majority`,
+  `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}/planners?retryWrites=true&w=majority`,
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 client.connect();
