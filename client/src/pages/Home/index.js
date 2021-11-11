@@ -225,7 +225,7 @@ export default class Home extends Component {
             color="primary"
             onClick={this.onCodeSearch}
             disabled={!isValid[0] ? true : false}
-            style={{ width: "135px", maxWidth: "100%", marginTop: "25px" }}
+            style={{ width: "150px", maxWidth: "100%", marginTop: "25px" }}
             startIcon={<ExitToAppIcon />}
           >
             Go!

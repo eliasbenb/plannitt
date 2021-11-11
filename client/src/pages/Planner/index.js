@@ -20,6 +20,7 @@ import {
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import FunctionsIcon from "@material-ui/icons/Functions";
 import LinkTwoToneIcon from "@material-ui/icons/LinkTwoTone";
@@ -55,6 +56,7 @@ export default class Planner extends Component {
     this.onAddUser = this.onAddUser.bind(this);
     this.onCalculateTime = this.onCalculateTime.bind(this);
     this.onCopyLink = this.onCopyLink.bind(this);
+    this.onExport = this.onExport.bind(this);
     this.onDelete = this.onDelete.bind(this);
     this.onDeleteUser = this.onDeleteUser.bind(this);
     this.onLogin = this.onLogin.bind(this);
@@ -251,6 +253,57 @@ export default class Planner extends Component {
       .then(() =>
         window.alert("The URL was successfully copied to your clipboard.")
       );
+  }
+
+  onExport() {
+    let { data, mode } = this.state;
+
+    var csv;
+    if (mode == "calendar") {
+      csv = "Users,Dates\n";
+      for (let i = 0; i < data.users.length; i++) {
+        let line = "";
+        for (let j = 0; j < data.users[i].times.length; j++) {
+          let dateObj = new Date(
+            `${data.users[i].times[j].month}-${data.users[i].times[j].day}-${data.users[i].times[j].year}`
+          );
+          let date = dateObj.toLocaleDateString(undefined, {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+          if (line != "") {
+            line += "\n" + date;
+          } else {
+            line += date;
+          }
+        }
+        csv += data.users[i].name + ',"' + line + '"' + "\r\n";
+      }
+    } else {
+      csv = "Users,Times\n";
+      for (let i = 0; i < data.users.length; i++) {
+        let line = "";
+        for (let j = 0; j < data.users[i].times.length; j++) {
+          let time = data.users[i].times[j].time;
+          if (line != "") {
+            line += "\n" + time;
+          } else {
+            line += time;
+          }
+        }
+        csv += data.users[i].name + ',"' + line + '"' + "\r\n";
+      }
+    }
+    var download = document.createElement("a");
+    download.setAttribute(
+      "href",
+      "data:text/csv;charset=utf-8," + encodeURIComponent(csv)
+    );
+    download.setAttribute("download", data.title);
+    download.click();
+    download.remove();
   }
 
   onDelete() {
@@ -545,6 +598,7 @@ export default class Planner extends Component {
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "center",
+            maxWidth: "325px",
           }}
         >
           <div className="button">
@@ -552,7 +606,7 @@ export default class Planner extends Component {
               variant="outlined"
               color="primary"
               onClick={this.onDelete}
-              style={{ width: "135px", maxWidth: "100%" }}
+              style={{ width: "150px", maxWidth: "100%" }}
               startIcon={<DeleteIcon />}
             >
               Delete
@@ -562,8 +616,19 @@ export default class Planner extends Component {
             <Button
               variant="outlined"
               color="primary"
+              onClick={this.onExport}
+              style={{ width: "150px", maxWidth: "100%" }}
+              startIcon={<GetAppIcon />}
+            >
+              Export
+            </Button>
+          </div>
+          <div className="button">
+            <Button
+              variant="outlined"
+              color="primary"
               onClick={this.onCopyLink}
-              style={{ width: "135px", maxWidth: "100%" }}
+              style={{ width: "150px", maxWidth: "100%" }}
               startIcon={<LinkTwoToneIcon />}
             >
               Copy Link
@@ -574,7 +639,7 @@ export default class Planner extends Component {
               variant="outlined"
               color="primary"
               onClick={this.onCalculateTime}
-              style={{ width: "135px", maxWidth: "100%" }}
+              style={{ width: "150px", maxWidth: "100%" }}
               startIcon={<FunctionsIcon />}
             >
               Calculate
@@ -603,7 +668,7 @@ export default class Planner extends Component {
           color="primary"
           onClick={this.onLogin}
           disabled={!isValid[1] ? true : false}
-          style={{ width: "135px", maxWidth: "100%" }}
+          style={{ width: "150px", maxWidth: "100%" }}
           startIcon={<ExitToAppIcon />}
         >
           Login
