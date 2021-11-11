@@ -5,15 +5,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/eliasbenb/plannitt.git"
-  },
-  "author": "Elias Benbourenane <eliasbenbourenane@gmail.com> (https://elias.eu.org)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/eliasbenb/plannitt/issues"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
