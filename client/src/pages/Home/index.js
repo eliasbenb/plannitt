@@ -7,12 +7,10 @@ import {
   Button,
   Divider,
   FormControlLabel,
-  IconButton,
   InputAdornment,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemSecondaryAction,
   ListItemText,
   Switch,
   TextField,
@@ -22,7 +20,8 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SearchIcon from "@material-ui/icons/Search";
 import TitleIcon from "@material-ui/icons/Title";
-import TodayRoundedIcon from "@material-ui/icons/TodayRounded";
+import CalendarTodayOutlinedIcon from "@material-ui/icons/CalendarTodayOutlined";
+import TableChartOutlinedIcon from "@material-ui/icons/TableChartOutlined";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
 import axios from "axios";
@@ -262,7 +261,11 @@ export default class Home extends Component {
                           >
                             <ListItemAvatar>
                               <Avatar>
-                                <TodayRoundedIcon />
+                                {recent_planners[k].mode == "calendar" ? (
+                                  <CalendarTodayOutlinedIcon />
+                                ) : (
+                                  <TableChartOutlinedIcon />
+                                )}
                               </Avatar>
                             </ListItemAvatar>
                           </Link>
