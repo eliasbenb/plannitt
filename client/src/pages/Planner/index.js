@@ -26,7 +26,7 @@ import FunctionsIcon from "@material-ui/icons/Functions";
 import LinkTwoToneIcon from "@material-ui/icons/LinkTwoTone";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 
-import { Calendar, utils } from "react-modern-calendar-datepicker";
+import { Calendar } from "react-modern-calendar-datepicker";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 
 import axios from "axios";
@@ -238,12 +238,13 @@ export default class Planner extends Component {
             }) + "\n";
         }
       }
+      this.setState({ days: days, isCalculated: true });
     } else {
       for (let i = 0; i < most_compatible.length; i++) {
         alert_str += most_compatible[i] + "\n";
       }
+      this.setState({ isCalculated: true });
     }
-    this.setState({ days: days, isCalculated: true });
     alert(alert_str);
   }
 

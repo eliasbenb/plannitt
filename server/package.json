@@ -2,6 +2,7 @@
   "name": "plannitt-server",
   "version": "1.0.0",
   "description": "A collaborative timetable creator built for teams",
+  "license": "MIT",
   "scripts": {
     "start": "node server.js"
   }

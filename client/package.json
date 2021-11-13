@@ -5,6 +5,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
+  "license": "MIT",
   "browserslist": {
     "production": [
       ">0.2%",
