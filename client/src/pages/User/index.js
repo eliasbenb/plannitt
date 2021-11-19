@@ -30,12 +30,18 @@ export class CalendarUser {
 
   sort() {
     const len = this.times.length;
+    var swapped = true;
     for (let i = 0; i < len - 1; i++) {
+      if (!swapped) {
+        break;
+      }
+      swapped = false;
       for (let j = 0; j < len - 1; j++) {
         if (utils().isBeforeDate(this.times[j + 1], this.times[j])) {
           let swap = this.times[j];
           this.times[j] = this.times[j + 1];
           this.times[j + 1] = swap;
+          swapped = true;
         }
       }
     }
@@ -96,12 +102,18 @@ export class TimetableUser {
 
   sort() {
     const len = this.times.length;
+    var swapped = true;
     for (let i = 0; i < len - 1; i++) {
+      if (!swapped) {
+        break;
+      }
+      swapped = false;
       for (let j = 0; j < len - 1; j++) {
         if (this.times[j + 1].unix_time < this.times[j].unix_time) {
           let swap = this.times[j];
           this.times[j] = this.times[j + 1];
           this.times[j + 1] = swap;
+          swapped = true;
         }
       }
     }

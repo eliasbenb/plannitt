@@ -453,12 +453,18 @@ export default class Planner extends Component {
     let { data } = this.state;
 
     const len = data.users.length;
+    var swapped = true;
     for (let i = 0; i < len - 1; i++) {
+      if (!swapped) {
+        break;
+      }
+      swapped = false;
       for (let j = 0; j < len - i - 1; j++) {
         if (data.users[j].name > data.users[j + 1].name) {
           let swap = data.users[j];
           data.users[j] = data.users[j + 1];
           data.users[j + 1] = swap;
+          swapped = true;
         }
       }
     }
