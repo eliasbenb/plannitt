@@ -67,6 +67,7 @@ export default class UserPage extends Component {
               ].map((a, b) =>
                 user.find(this.unixify({ day: a, hour: n + 6 })) ? (
                   <td
+                    style={{ backgroundColor: "green" }}
                     onClick={() =>
                       user.remove(this.unixify({ day: a, hour: n + 6 }))
                     }

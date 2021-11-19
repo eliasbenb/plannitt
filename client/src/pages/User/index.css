@@ -32,11 +32,3 @@ th {
   background-color: #4197fe;
   color: #fff;
 }
-
-tbody tr:nth-child(odd) {
-  background-color: #292929;
-}
-
-tbody tr:nth-child(even) {
-  background-color: #5a5a5a;
-}

@@ -91,7 +91,6 @@ export default class Home extends Component {
         users: [],
         public: false,
         title: title,
-        type: "group",
       };
     } else {
       post_data = {
@@ -100,7 +99,6 @@ export default class Home extends Component {
         users: [],
         public: true,
         title: title,
-        type: "group",
       };
     }
 

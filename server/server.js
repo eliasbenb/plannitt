@@ -35,7 +35,6 @@ app.post("/api/v1/planner/post", async (req, res) => {
     users: [],
     public: req.body.public,
     title: req.body.title,
-    type: "group",
   };
   const result = await collection.insertOne(data);
   if (!result) {
