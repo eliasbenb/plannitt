@@ -69,7 +69,6 @@ onCodeChange(evt) {
         this.setState({
           code: evt.target.value,
           isValid: isValid,
-          isValid: isValid,
         });
       }
     } else {

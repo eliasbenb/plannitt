@@ -37,12 +37,12 @@ app.post("/api/v1/planner/post", async (req, res) => {
     title: req.body.title || "Planner",
   };
 
-  if (!isAlpha(data.title) || !isAlpha(data.password)) {
+  if (!isAlpha(data.title)) {
     res.status(400);
     res.send({
       code: 400,
       content: null,
-      message: "Illegal characters were used in the title or password!",
+      message: "Illegal characters were used in the title!",
       success: false,
     });
     return;
