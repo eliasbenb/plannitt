@@ -163,7 +163,7 @@ export default class Planner extends Component {
       .catch((error) => {
         console.error(error);
         if (error.response) {
-          window.alert(error.response.message || "Error!");
+          window.alert(error.response.data.message || "Error!");
         } else {
           window.alert("Error!");
         }
@@ -333,7 +333,7 @@ export default class Planner extends Component {
       .catch((error) => {
         console.error(error);
         if (error.response) {
-          window.alert(error.response.message || "Error!");
+          window.alert(error.response.data.message || "Error!");
         } else {
           window.alert("Error!");
         }
@@ -362,7 +362,7 @@ export default class Planner extends Component {
       .catch((error) => {
         console.error(error);
         if (error.response) {
-          window.alert(error.response.message || "Error!");
+          window.alert(error.response.data.message || "Error!");
         } else {
           window.alert("Error!");
         }

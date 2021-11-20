@@ -31,11 +31,23 @@ app.post("/api/v1/planner/post", async (req, res) => {
 
   const data = {
     mode: req.body.mode == "calendar" ? "calendar" : "timetable",
-    password: req.body.password,
+    password: req.body.password || "",
     users: [],
-    public: req.body.public,
-    title: req.body.title,
+    public: req.body.public || true,
+    title: req.body.title || "Planner",
   };
+
+  if (!isAlpha(data.title) || !isAlpha(data.password)) {
+    res.status(400);
+    res.send({
+      code: 400,
+      content: null,
+      message: "Illegal characters were used in the title or password!",
+      success: false,
+    });
+    return;
+  }
+
   const result = await collection.insertOne(data);
   if (!result) {
     res.status(500);
@@ -45,9 +57,11 @@ app.post("/api/v1/planner/post", async (req, res) => {
       message: "The planner could not be created!",
       success: false,
     });
+    return;
   } else {
     res.status(200);
     res.send({ code: 200, content: result, success: true });
+    return;
   }
 });
 
@@ -61,6 +75,16 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
       name: req.body.name,
       times: [],
     };
+    if (!isAlpha(data.name)) {
+      res.status(400);
+      res.send({
+        code: 400,
+        content: null,
+        message: "Illegal characters were used in the name!",
+        success: false,
+      });
+      return;
+    }
     const data = await collection.findOne({ _id: oid });
     if (!data) {
       res.status(404);
@@ -70,6 +94,7 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
         message: "Planner not found!",
         success: false,
       });
+      return;
     } else {
       if (data.public || req.query.password == data.password) {
         if (data.users.some((i) => i.name == req.body.name)) {
@@ -80,6 +105,7 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
             message: "That name already exists in this planner",
             success: false,
           });
+          return;
         } else {
           const result = await collection.updateOne(
             { _id: oid },
@@ -95,9 +121,11 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
                 message: "Planner not found!",
                 success: false,
               });
+              return;
             } else {
               res.status(200);
               res.send({ code: 200, content: new_data, success: true });
+              return;
             }
           } else {
             res.status(500);
@@ -107,6 +135,7 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
               message: "Deletion failed",
               success: false,
             });
+            return;
           }
         }
       } else {
@@ -117,6 +146,7 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
           message: "The password provided was incorrect",
           success: false,
         });
+        return;
       }
     }
   } else {
@@ -127,6 +157,7 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
       message: "The OID provided was incorrect",
       success: false,
     });
+    return;
   }
 });
 
@@ -144,10 +175,12 @@ app.get("/api/v1/planner/get/:oid", async (req, res) => {
         message: "Planner not found!",
         success: false,
       });
+      return;
     } else {
       if (result.public || req.query.password == result.password) {
         res.status(200);
         res.send({ code: 200, content: result, success: true });
+        return;
       } else {
         res.status(401);
         res.send({
@@ -156,6 +189,7 @@ app.get("/api/v1/planner/get/:oid", async (req, res) => {
           message: "The password provided was incorrect",
           success: false,
         });
+        return;
       }
     }
   } else {
@@ -166,6 +200,7 @@ app.get("/api/v1/planner/get/:oid", async (req, res) => {
       message: "The OID provided was incorrect",
       success: false,
     });
+    return;
   }
 });
 
@@ -183,6 +218,7 @@ app.get("/api/v1/planner/get/:oid/:name", async (req, res) => {
         message: "Planner not found!",
         success: false,
       });
+      return;
     } else {
       if (data.public || req.query.password == data.password) {
         const result = data.users.find((i) => i.name == req.params.name);
@@ -194,6 +230,7 @@ app.get("/api/v1/planner/get/:oid/:name", async (req, res) => {
             mode: data.mode,
             success: true,
           });
+          return;
         } else {
           res.status(404);
           res.send({
@@ -202,6 +239,7 @@ app.get("/api/v1/planner/get/:oid/:name", async (req, res) => {
             message: "The planner was found, but not the user!",
             success: false,
           });
+          return;
         }
       } else {
         res.status(401);
@@ -211,6 +249,7 @@ app.get("/api/v1/planner/get/:oid/:name", async (req, res) => {
           message: "The password provided was incorrect",
           success: false,
         });
+        return;
       }
     }
   } else {
@@ -221,6 +260,7 @@ app.get("/api/v1/planner/get/:oid/:name", async (req, res) => {
       message: "The OID provided was incorrect",
       success: false,
     });
+    return;
   }
 });
 
@@ -239,6 +279,7 @@ app.post("/api/v1/planner/post/:oid/:name", async (req, res) => {
         message: "Planner not found!",
         success: false,
       });
+      return;
     } else {
       if (data.public || req.query.password == data.password) {
         const result = await collection.updateOne(
@@ -255,9 +296,11 @@ app.post("/api/v1/planner/post/:oid/:name", async (req, res) => {
               message: "Planner not found!",
               success: false,
             });
+            return;
           } else {
             res.status(200);
             res.send({ code: 200, content: new_data, success: true });
+            return;
           }
         } else {
           res.status(500);
@@ -267,6 +310,7 @@ app.post("/api/v1/planner/post/:oid/:name", async (req, res) => {
             message: "Insertion failed",
             success: false,
           });
+          return;
         }
       } else {
         res.status(401);
@@ -276,6 +320,7 @@ app.post("/api/v1/planner/post/:oid/:name", async (req, res) => {
           message: "The password provided was incorrect",
           success: false,
         });
+        return;
       }
     }
   } else {
@@ -286,6 +331,7 @@ app.post("/api/v1/planner/post/:oid/:name", async (req, res) => {
       message: "The OID provided was incorrect",
       success: false,
     });
+    return;
   }
 });
 
@@ -303,12 +349,14 @@ app.get("/api/v1/planner/pull/:oid", async (req, res) => {
         message: "Planner not found!",
         success: false,
       });
+      return;
     } else {
       if (data.public || req.query.password == data.password) {
         const result = await collection.deleteOne({ _id: oid });
         if (result && result.deletedCount > 0) {
           res.status(200);
           res.send({ code: 200, content: result, success: true });
+          return;
         } else {
           res.status(500);
           res.send({
@@ -317,6 +365,7 @@ app.get("/api/v1/planner/pull/:oid", async (req, res) => {
             message: "Deletion failed",
             success: false,
           });
+          return;
         }
       } else {
         res.status(401);
@@ -326,6 +375,7 @@ app.get("/api/v1/planner/pull/:oid", async (req, res) => {
           message: "The password provided was incorrect",
           success: false,
         });
+        return;
       }
     }
   } else {
@@ -336,6 +386,7 @@ app.get("/api/v1/planner/pull/:oid", async (req, res) => {
       message: "The OID provided was incorrect",
       success: false,
     });
+    return;
   }
 });
 
@@ -353,6 +404,7 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
         message: "Planner not found!",
         success: false,
       });
+      return;
     } else {
       if (data.public || req.query.password == data.password) {
         const result = await collection.updateOne(
@@ -369,9 +421,11 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
               message: "Planner not found!",
               success: false,
             });
+            return;
           } else {
             res.status(200);
             res.send({ code: 200, content: new_data, success: true });
+            return;
           }
         } else {
           res.status(500);
@@ -381,6 +435,7 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
             message: "Deletion failed",
             success: false,
           });
+          return;
         }
       } else {
         res.status(401);
@@ -390,6 +445,7 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
           message: "The password provided was incorrect",
           success: false,
         });
+        return;
       }
     }
   } else {
@@ -400,5 +456,17 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
       message: "The OID provided was incorrect",
       success: false,
     });
+    return;
   }
 });
+
+isAlpha = (value) => {
+  console.log(value);
+  if (
+    /^[a-zA-Z0-9 èàùìòÈÀÒÙÌéáúíóÉÁÚÍÓëäüïöËÄÜÏÖêâûîôÊÂÛÎÔç'-]*$/.test(value)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};

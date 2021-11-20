@@ -56,19 +56,29 @@ export default class Home extends Component {
     this.onTitleChange = this.onTitleChange.bind(this);
   }
 
-  onCodeChange(evt) {
-    if (evt.target.value != this.state.code) {
-      if (evt.target.value) {
+onCodeChange(evt) {
+  if (evt.target.value != this.state.code) {
+    if (evt.target.value) {
+      if (evt.target.value.length == 24) {
         var isValid = this.state.isValid;
         isValid[0] = true;
         this.setState({ code: evt.target.value, isValid: isValid });
       } else {
         var isValid = this.state.isValid;
         isValid[0] = false;
-        this.setState({ code: null, isValid: isValid });
+        this.setState({
+          code: evt.target.value,
+          isValid: isValid,
+          isValid: isValid,
+        });
       }
+    } else {
+      var isValid = this.state.isValid;
+      isValid[0] = false;
+      this.setState({ code: null, isValid: isValid });
     }
   }
+}
 
   onCodeSearch() {
     let { code } = this.state;
@@ -118,7 +128,7 @@ export default class Home extends Component {
       .catch((error) => {
         console.error(error);
         if (error.response) {
-          window.alert(error.response.message || "Error!");
+          window.alert(error.response.data.message || "Error!");
         } else {
           window.alert("Error!");
         }
