@@ -461,7 +461,6 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
 });
 
 isAlpha = (value) => {
-  console.log(value);
   if (
     /^[a-zA-Z0-9 èàùìòÈÀÒÙÌéáúíóÉÁÚÍÓëäüïöËÄÜÏÖêâûîôÊÂÛÎÔç'-]*$/.test(value)
   ) {
