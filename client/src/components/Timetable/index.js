@@ -81,7 +81,7 @@ export default class UserPage extends Component {
                       user.add({
                         day: a,
                         hour: n + 6,
-                        time: `${a}, ${n + 6} ${n < 6 ? "AM" : "PM"}`,
+                        time: `${a}, ${n < 6 ? `${n + 6} AM` : `${n - 6} PM`}`,
                         unix_time: this.unixify({ day: a, hour: n + 6 }),
                       })
                     }

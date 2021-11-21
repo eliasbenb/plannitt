@@ -179,21 +179,19 @@ export default class Planner extends Component {
     var most_compatible = [];
     if (mode == "calendar") {
       for (let i = 0; i < users_len; i++) {
-        for (let j = 0; j < data.users[i].times.length; j++) {
-          let time = data.users[i].times[j];
-          let time_str = `${time.month}-${time.day}-${time.year}`;
+        for (let time of data.users[i].times) {
+          let time_str = `$${time.month}-${time.day}-${time.year}`;
           if (time_str in same_days) {
-            if (same_days[time_str] > highest) {
-              highest = same_days[time_str];
-              most_compatible = [];
-              most_compatible.push(time_str);
-            } else if (same_days[time_str] == highest) {
-              highest += 1;
-              most_compatible.push(time_str);
+            if (same_days[time_str]) {
+              same_days[time_str]++;
+              most_compatible.push(time);
             }
-            same_days[time_str] = same_days[time_str] + 1;
           } else {
             same_days[time_str] = 1;
+          }
+          if (highest < same_days[time_str]) {
+            most_compatible = [time];
+            highest = same_days[time_str];
           }
         }
       }
@@ -222,13 +220,10 @@ export default class Planner extends Component {
     var days = [];
     if (mode == "calendar") {
       for (let i = 0; i < most_compatible.length; i++) {
-        let date = new Date(most_compatible[i]);
+        let time_str = `${most_compatible[i].month}-${most_compatible[i].day}-${most_compatible[i].year}`;
+        let date = new Date(time_str);
         if (date > new Date()) {
-          days.push({
-            day: date.getDay(),
-            month: date.getMonth(),
-            year: date.getFullYear(),
-          });
+          days.push(most_compatible[i]);
           alert_str +=
             date.toLocaleDateString(undefined, {
               weekday: "long",

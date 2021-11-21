@@ -188,15 +188,15 @@ export default class UserPage extends Component {
   }
 
   onSubmitCalendar() {
-    let { days, name, oid, password } = this.state;
+    let { days, name, oid, password, user } = this.state;
 
-    this.state.user.postTime(days);
+    user.postTime(days);
 
     let req_path = `/api/v1/planner/post/${oid}/${name}`;
     let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
-      .post(req_path + req_args, this.state.user.times)
+      .post(req_path + req_args, user.times)
       .then((response) => {
         let data = response.data;
         if (data.success) {
@@ -217,15 +217,15 @@ export default class UserPage extends Component {
   }
 
   onSubmitTimetable() {
-    let { name, oid, password } = this.state;
+    let { name, oid, password, user } = this.state;
 
-    this.state.user.sort();
+    user.sort();
 
     let req_path = `/api/v1/planner/post/${oid}/${name}`;
     let req_args = `?password=${encodeURIComponent(password || "")}`;
 
     axios
-      .post(req_path + req_args, this.state.user.times)
+      .post(req_path + req_args, user.times)
       .then((response) => {
         let data = response.data;
         if (data.success) {
