@@ -75,7 +75,7 @@ app.post("/api/v1/planner/post/:oid", async (req, res) => {
       name: req.body.name,
       times: [],
     };
-    if (!isAlpha(data.name)) {
+    if (!isAlpha(post_data.name)) {
       res.status(400);
       res.send({
         code: 400,
