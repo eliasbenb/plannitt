@@ -460,6 +460,10 @@ app.get("/api/v1/planner/pull/:oid/:name", async (req, res) => {
   }
 });
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
+
 isAlpha = (value) => {
   if (
     /^[a-zA-Z0-9 èàùìòÈÀÒÙÌéáúíóÉÁÚÍÓëäüïöËÄÜÏÖêâûîôÊÂÛÎÔç'-]*$/.test(value)
