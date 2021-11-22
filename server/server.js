@@ -37,17 +37,6 @@ app.post("/api/v1/planner/post", async (req, res) => {
     title: req.body.title || "Planner",
   };
 
-  if (!isAlpha(data.title)) {
-    res.status(400);
-    res.send({
-      code: 400,
-      content: null,
-      message: "Illegal characters were used in the title!",
-      success: false,
-    });
-    return;
-  }
-
   const result = await collection.insertOne(data);
   if (!result) {
     res.status(500);
@@ -465,11 +454,21 @@ app.get("*", (req, res) => {
 });
 
 isAlpha = (value) => {
-  if (
-    /^[a-zA-Z0-9 èàùìòÈÀÒÙÌéáúíóÉÁÚÍÓëäüïöËÄÜÏÖêâûîôÊÂÛÎÔç'-]*$/.test(value)
-  ) {
-    return true;
-  } else {
+  if (!value) {
     return false;
   }
+  for (let i = 0; i < value.length; i++) {
+    ascii_code = value.codePointAt(i);
+    if (
+      !(
+        (ascii_code >= 65 && ascii_code <= 90) ||
+        (ascii_code >= 97 && ascii_code <= 122) ||
+        (ascii_code >= 48 && ascii_code <= 57) ||
+        ascii_code == 32
+      )
+    ) {
+      return false;
+    }
+  }
+  return true;
 };
