@@ -174,18 +174,16 @@ export default class Planner extends Component {
     let { data, mode } = this.state;
 
     const users_len = data.users.length;
+    var most_compatible = [];
     var same_days = [];
     var highest = 0;
-    var most_compatible = [];
     if (mode == "calendar") {
       for (let i = 0; i < users_len; i++) {
         for (let time of data.users[i].times) {
-          let time_str = `$${time.month}-${time.day}-${time.year}`;
+          let time_str = `${time.month}-${time.day}-${time.year}`;
           if (time_str in same_days) {
-            if (same_days[time_str]) {
-              same_days[time_str]++;
-              most_compatible.push(time);
-            }
+            same_days[time_str]++;
+            most_compatible.push(time);
           } else {
             same_days[time_str] = 1;
           }
@@ -197,20 +195,18 @@ export default class Planner extends Component {
       }
     } else {
       for (let i = 0; i < users_len; i++) {
-        for (let j = 0; j < data.users[i].times.length; j++) {
-          let time = data.users[i].times[j].time;
-          if (time in same_days) {
-            if (same_days[time] > highest) {
-              highest = same_days[time];
-              most_compatible = [];
-              most_compatible.push(time);
-            } else if (same_days[time] == highest) {
-              highest += 1;
-              most_compatible.push(time);
+        for (let time of data.users[i].times) {
+          let time_str = time.time;
+          if (time_str in same_days) {
+            same_days[time_str] ++;
+            if (same_days[time_str] > highest) {
+              highest = same_days[time_str];
+              most_compatible = [time_str];
+            } else if (same_days[time_str] == highest) {
+              most_compatible.push(time_str);
             }
-            same_days[time] = same_days[time] + 1;
           } else {
-            same_days[time] = 1;
+            same_days[time_str] = 1;
           }
         }
       }
