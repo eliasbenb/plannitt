@@ -125,10 +125,12 @@ export default class Planner extends Component {
           } else {
             console.error(error);
             window.alert(error.response.data.message || "Error!");
+            this.props.history.push("/");
           }
         } else {
           console.error(error);
           window.alert("Error!");
+          this.props.history.push("/");
         }
       });
   }
