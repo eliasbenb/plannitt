@@ -54,12 +54,33 @@ export default class Home extends Component {
     this.onPasswordChange = this.onPasswordChange.bind(this);
     this.onPublic = this.onPublic.bind(this);
     this.onTitleChange = this.onTitleChange.bind(this);
+    this.isAlpha = this.isAlpha.bind(this);
+  }
+
+  isAlpha(value) {
+    if (!value) {
+      return false;
+    }
+    for (let i = 0; i < value.length; i++) {
+      var ascii_code = value.codePointAt(i);
+      if (
+        !(
+          (ascii_code >= 65 && ascii_code <= 90) ||
+          (ascii_code >= 97 && ascii_code <= 122) ||
+          (ascii_code >= 48 && ascii_code <= 57) ||
+          ascii_code == 32
+        )
+      ) {
+        return false;
+      }
+    }
+    return true;
   }
 
   onCodeChange(evt) {
     if (evt.target.value != this.state.code) {
       if (evt.target.value) {
-        if (evt.target.value.length == 24) {
+        if (evt.target.value.length == 24 && this.isAlpha(evt.target.value)) {
           var isValid = this.state.isValid;
           isValid[0] = true;
           this.setState({ code: evt.target.value, isValid: isValid });

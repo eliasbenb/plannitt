@@ -458,7 +458,7 @@ isAlpha = (value) => {
     return false;
   }
   for (let i = 0; i < value.length; i++) {
-    ascii_code = value.codePointAt(i);
+    var ascii_code = value.codePointAt(i);
     if (
       !(
         (ascii_code >= 65 && ascii_code <= 90) ||
