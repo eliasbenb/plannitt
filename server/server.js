@@ -33,7 +33,7 @@ app.post("/api/v1/planner/post", async (req, res) => {
     mode: req.body.mode == "calendar" ? "calendar" : "timetable",
     password: req.body.password || "",
     users: [],
-    public: req.body.public || true,
+    public: req.body.public == true,
     title: req.body.title || "Planner",
   };
 
